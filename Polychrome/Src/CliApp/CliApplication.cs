@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CoreApp;
+﻿using CoreApp;
 
 namespace CliApp
 {

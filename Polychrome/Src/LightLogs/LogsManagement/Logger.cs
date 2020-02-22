@@ -1,6 +1,4 @@
 ﻿using Kernel;
-using LightLogs;
-using LightLogs.LogsManagement;
 using System;
 
 namespace LightLogs.LogsManagement

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LightLogs;
 using LightLogs.Configs;
-using LightLogs.Targets;
 
 namespace LightLogs.Targets
 {

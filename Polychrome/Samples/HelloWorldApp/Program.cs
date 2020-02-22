@@ -1,5 +1,4 @@
-﻿using System;
-using CliApp;
+﻿using CliApp;
 
 namespace HelloWorldApp
 {

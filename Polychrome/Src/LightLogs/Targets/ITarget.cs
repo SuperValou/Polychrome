@@ -1,5 +1,4 @@
-﻿using LightLogs;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace LightLogs.Targets

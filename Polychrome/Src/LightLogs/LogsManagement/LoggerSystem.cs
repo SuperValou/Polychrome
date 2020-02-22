@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Kernel;
 using LightLogs.Targets;
 using LightLogs.Configs;
-using LightLogs.Targets;
 
 namespace LightLogs.LogsManagement
 {
