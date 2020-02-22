@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CoreApp
+namespace ApplicationCore
 {
-    public abstract class CoreApplication
+    public abstract class AbstractApp
     {
         public string AppName { get; }
         public string Version { get; }
 
-        protected CoreApplication(string appName, string version)
+        protected AbstractApp(string appName, string version)
         {
             if (string.IsNullOrWhiteSpace(appName))
             {
