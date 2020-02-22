@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kernel;
+using Kernel.Exceptions;
 using LightLogs.Targets;
 using LightLogs.Configs;
 
 namespace LightLogs.LogsManagement
 {
-    public class LoggerSystem : IDisposable
+    public class LoggerSystem : ILoggerSystem
     {
-        private static LoggerSystem _systemInstance;
-
         private readonly ICollection<ITarget> _targets = new List<ITarget>();
         
         private LogCentral _logCentral;
@@ -20,22 +19,7 @@ namespace LightLogs.LogsManagement
 
         public bool ConsoleTargetEnabled { get; set; } = true;
         public ConsoleTargetConfig ConsoleTargetConfig { get; } = new ConsoleTargetConfig();
-
-        private LoggerSystem()
-        {
-        }
-
-        public static LoggerSystem GetInstance()
-        {
-            if (_systemInstance != null)
-            {
-                return _systemInstance;
-            }
-
-            _systemInstance = new LoggerSystem();
-            return _systemInstance;
-        }
-
+        
         public void AddTarget(ITarget target)
         {
             if (target == null)
@@ -51,11 +35,22 @@ namespace LightLogs.LogsManagement
             _targets.Add(target);
         }
 
-        public ILogger GetOrCreateLogger()
+        public ILogger InitializeLogger()
         {
+            string rootLoggerName = AppDomain.CurrentDomain.FriendlyName;
+            return InitializeLogger(rootLoggerName);
+        }
+
+        public ILogger InitializeLogger(string rootLoggerName)
+        {
+            if (rootLoggerName == null)
+            {
+                throw new ArgumentNullException(nameof(rootLoggerName));
+            }
+            
             if (_rootLogger != null)
             {
-                return _rootLogger;
+                throw new AlreadyInitializedException(nameof(LoggerSystem));
             }
 
             if (this.ConsoleTargetEnabled)
@@ -73,9 +68,8 @@ namespace LightLogs.LogsManagement
             }
             
             _logCentral = new LogCentral(_targets);
-            _targets.Clear();
-
-            _rootLogger = new Logger(AppDomain.CurrentDomain.FriendlyName, _logCentral);
+            
+            _rootLogger = new Logger(rootLoggerName, _logCentral);
 
             return _rootLogger;
         }

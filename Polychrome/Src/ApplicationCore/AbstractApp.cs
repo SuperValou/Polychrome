@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kernel;
+using LightLogs.LogsManagement;
 
 namespace ApplicationCore
 {
     public abstract class AbstractApp
     {
+        private readonly ILoggerSystem _loggerSystem = new LoggerSystem();
+
         public string AppName { get; }
         public string Version { get; }
+
+        protected ILogger Logger { get; }
 
         protected AbstractApp(string appName, string version)
         {
@@ -22,6 +28,7 @@ namespace ApplicationCore
 
         public void Initialize(ICollection<string> args)
         {
+
             throw new NotImplementedException();
         }
 
