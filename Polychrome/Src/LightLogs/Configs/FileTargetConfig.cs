@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleLogs.Configs
+namespace LightLogs.Configs
 {
     public class FileTargetConfig
     {

@@ -1,4 +1,4 @@
-﻿namespace SimpleLogs
+﻿namespace LightLogs
 {
     public enum LogLevel
     {

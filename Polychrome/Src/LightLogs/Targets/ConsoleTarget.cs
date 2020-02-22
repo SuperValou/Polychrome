@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SimpleLogs.Configs;
+using LightLogs;
+using LightLogs.Configs;
+using LightLogs.Targets;
 
-namespace SimpleLogs.Targets
+namespace LightLogs.Targets
 {
     internal class ConsoleTarget : ITarget
     {

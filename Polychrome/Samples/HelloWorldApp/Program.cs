@@ -1,4 +1,5 @@
 ﻿using System;
+using CliApp;
 
 namespace HelloWorldApp
 {
@@ -9,7 +10,7 @@ namespace HelloWorldApp
 
         static void Main(string[] args)
         {
-            var cliApp = new CliApp(AppName, Version);
+            var cliApp = new CliApplication(AppName, Version);
             cliApp.Initialize(args);
             cliApp.Boot();
         }

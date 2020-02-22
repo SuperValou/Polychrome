@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SimpleLogs.Targets;
+using LightLogs;
+using LightLogs.LogsManagement;
+using LightLogs.Targets;
 
-namespace SimpleLogs.LogsManagement
+namespace LightLogs.LogsManagement
 {
     internal class LogCentral : ILogCentral, IDisposable
     {

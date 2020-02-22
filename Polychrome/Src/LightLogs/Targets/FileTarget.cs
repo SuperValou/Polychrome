@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using SimpleLogs.Configs;
+using LightLogs;
+using LightLogs.Configs;
 
-namespace SimpleLogs.Targets
+namespace LightLogs.Targets
 {
     internal class FileTarget : ITarget
     {

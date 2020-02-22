@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Kernel;
+using LightLogs;
+using LightLogs.LogsManagement;
+using System;
 
-namespace SimpleLogs.LogsManagement
+namespace LightLogs.LogsManagement
 {
     internal class Logger : ILogger
     {

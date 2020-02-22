@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SimpleLogs
+namespace LightLogs
 {
-    internal  class LogEvent
+    internal class LogEvent
     {
         public string Owner { get; }
 

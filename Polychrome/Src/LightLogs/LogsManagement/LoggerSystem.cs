@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using SimpleLogs.Configs;
-using SimpleLogs.Targets;
+using Kernel;
+using LightLogs.Targets;
+using LightLogs.Configs;
+using LightLogs.Targets;
 
-namespace SimpleLogs.LogsManagement
+namespace LightLogs.LogsManagement
 {
     public class LoggerSystem : IDisposable
     {

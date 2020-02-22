@@ -1,7 +1,8 @@
-﻿using System;
+﻿using LightLogs;
+using System;
 using System.Threading.Tasks;
 
-namespace SimpleLogs.Targets
+namespace LightLogs.Targets
 {
     public interface ITarget : IDisposable
     {

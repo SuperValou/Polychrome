@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleLogs
+namespace Kernel
 {
     public interface ILogger
     {

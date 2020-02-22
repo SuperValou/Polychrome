@@ -1,4 +1,4 @@
-﻿namespace SimpleLogs.LogsManagement
+﻿namespace LightLogs.LogsManagement
 {
     internal interface ILogCentral
     {
