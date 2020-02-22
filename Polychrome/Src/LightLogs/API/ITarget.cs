@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace LightLogs.Targets
+namespace LightLogs.API
 {
     public interface ITarget : IDisposable
     {

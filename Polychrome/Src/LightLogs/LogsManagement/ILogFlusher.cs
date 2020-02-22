@@ -1,6 +1,6 @@
 ﻿namespace LightLogs.LogsManagement
 {
-    internal interface ILogCentral
+    internal interface ILogFlusher
     {
         void AddLogEvent(LogEvent logEvent);
     }

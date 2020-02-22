@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using LightLogs.API;
 using LightLogs.Configs;
 
 namespace LightLogs.Targets
 {
+    // TODO: improve
     internal class FileTarget : ITarget
     {
         private string _logFolder;
@@ -96,7 +98,5 @@ namespace LightLogs.Targets
 
             throw new InvalidOperationException("Should not be reached.");
         }
-
-
     }
 }

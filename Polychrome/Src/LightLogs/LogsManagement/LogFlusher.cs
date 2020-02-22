@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LightLogs.API;
 using LightLogs.Targets;
 
 namespace LightLogs.LogsManagement
 {
-    internal class LogCentral : ILogCentral, IDisposable
+    internal class LogFlusher : ILogFlusher, IDisposable
     {
         private readonly Task _flushTask;
 
@@ -16,7 +17,7 @@ namespace LightLogs.LogsManagement
         private readonly ICollection<ITarget> _targets = new List<ITarget>();
         private volatile bool _disabled = false;
 
-        internal LogCentral(IEnumerable<ITarget> targets)
+        internal LogFlusher(IEnumerable<ITarget> targets)
         {
             if (targets == null)
             {
@@ -27,7 +28,7 @@ namespace LightLogs.LogsManagement
             {
                 if (target == null)
                 {
-                    throw new ArgumentException("One of the target wall null.", nameof(targets));
+                    throw new ArgumentException("One of the target was null.", nameof(targets));
                 }
 
                 _targets.Add(target);
@@ -140,12 +141,14 @@ namespace LightLogs.LogsManagement
 
             builder.Append(logEvent.Message ?? string.Empty);
 
-            if (logEvent.Exception != null)
-            {
-            }
-
             builder.AppendLine();
 
+            if (logEvent.Exception != null)
+            {
+                builder.Append(logEvent.Exception.ToString());
+                builder.AppendLine();
+            }
+            
             char[] output = new char[builder.Length];
             builder.CopyTo(0, output, builder.Length);
 

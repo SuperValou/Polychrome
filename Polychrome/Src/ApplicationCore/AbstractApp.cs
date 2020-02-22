@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kernel;
+using LightLogs.API;
 using LightLogs.LogsManagement;
 
 namespace ApplicationCore
 {
     public abstract class AbstractApp
     {
-        private readonly ILoggerSystem _loggerSystem = new LoggerSystem();
+        private readonly ILogSystem _logSystem = new LogSystem();
 
         public string AppName { get; }
         public string Version { get; }
