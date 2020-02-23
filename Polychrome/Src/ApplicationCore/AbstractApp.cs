@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ApplicationCore.ArgParsing;
 using Kernel;
 using LightLogs.API;
 using LightLogs.LogsManagement;
@@ -10,10 +11,11 @@ namespace ApplicationCore
     {
         private readonly ILogSystem _logSystem = new LogSystem();
 
+        protected ILogger Logger { get; }
+
         public string AppName { get; }
         public string Version { get; }
-
-        protected ILogger Logger { get; }
+              
 
         protected AbstractApp(string appName, string version)
         {
@@ -22,13 +24,25 @@ namespace ApplicationCore
                 throw new ArgumentException($"{nameof(appName)} cannot be null or empty.", nameof(appName));
             }
 
+            if (string.IsNullOrEmpty(version))
+            {
+                throw new ArgumentException($"{nameof(version)} cannot be null or empty.", nameof(version));
+            }
+
             AppName = appName;
-            Version = version ?? throw new ArgumentNullException(nameof(version));
+            Version = version;
         }
 
 
         public void Initialize(ICollection<string> args)
         {
+            if (args == null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
+
+            ParseArgs(args);
+
             // parse args
             // arm logger (logs --disable or logs --nofile)
             // arm systems
@@ -41,5 +55,10 @@ namespace ApplicationCore
         {
             throw new NotImplementedException();
         }
+
+        private void ParseArgs(ICollection<string> args)
+        {
+            throw new NotImplementedException();
+        }        
     }
 }
