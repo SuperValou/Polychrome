@@ -5,7 +5,7 @@ using LightLogs.Configs;
 
 namespace LightLogs.Targets
 {
-    internal class ConsoleTarget : ITarget
+    public class ConsoleTarget : ITarget
     {
         private ConsoleTargetConfig _consoleTargetConfig;
 
@@ -23,49 +23,41 @@ namespace LightLogs.Targets
             return Task.Run(() =>
             {
                 ConsoleColor oldColor = Console.ForegroundColor;
-                ConsoleColor currentColor;
-
+                
                 switch (level)
                 {
                     case LogLevel.Trace:
-                        currentColor = _consoleTargetConfig.TraceColor;
+                        Console.ForegroundColor = _consoleTargetConfig.TraceColor;
                         break;
 
                     case LogLevel.Debug:
-                        currentColor = _consoleTargetConfig.DebugColor;
+                        Console.ForegroundColor = _consoleTargetConfig.DebugColor;
                         break;
 
                     case LogLevel.Info:
-                        currentColor = _consoleTargetConfig.InfoColor;
+                        Console.ForegroundColor = _consoleTargetConfig.InfoColor;
                         break;
 
                     case LogLevel.Warning:
-                        currentColor = _consoleTargetConfig.WarningColor;
+                        Console.ForegroundColor = _consoleTargetConfig.WarningColor;
                         break;
 
                     case LogLevel.Error:
-                        currentColor = _consoleTargetConfig.ErrorColor;
+                        Console.Error.Write(log);
+                        Console.ForegroundColor = _consoleTargetConfig.ErrorColor;                        
                         break;
 
                     case LogLevel.Fatal:
-                        currentColor = _consoleTargetConfig.FatalColor;
+                        Console.Error.Write(log);
+                        Console.ForegroundColor = _consoleTargetConfig.FatalColor;
                         break;
 
-                    default:
-                        currentColor = oldColor;
+                    default:                        
                         break;
                 }
 
-                if (currentColor != oldColor)
-                {
-                    Console.ForegroundColor = currentColor;
-                    Console.Write(log);
-                    Console.ForegroundColor = oldColor;
-                }
-                else
-                {
-                    Console.Write(log);
-                }
+                Console.Write(log);
+                Console.ForegroundColor = oldColor;
             });
         }
 

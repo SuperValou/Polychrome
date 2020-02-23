@@ -14,7 +14,23 @@ namespace LightLogs.LogsManagement
         
         private LogFlusher _logFlusher;
         private ILogger _rootLogger;
-        
+
+        public void AddDefaultConsoleTarget()
+        {
+            var consoleTarget = new ConsoleTarget();
+            var consoleConfig = DefaultConfigFactory.GetDefaultConsoleTargetConfig();
+            consoleTarget.Initialize(consoleConfig);
+            AddTarget(consoleTarget);
+        }
+
+        public void AddDefaultFileTarget()
+        {
+            var fileTarget = new FileTarget();
+            var fileTargetConfig = DefaultConfigFactory.GetDefaultFileTargetConfig();
+            fileTarget.Initialize(fileTargetConfig);
+            AddTarget(fileTarget);
+        }
+
         public void AddTarget(ITarget target)
         {
             if (target == null)
@@ -49,8 +65,10 @@ namespace LightLogs.LogsManagement
             }
             
             _logFlusher = new LogFlusher(_targets);
+            // TODO: _logFlusher.Enable();
             
             _rootLogger = new Logger(rootLoggerName, _logFlusher);
+            _rootLogger.Debug($"{nameof(LogSystem)} armed, logging to {_targets.Count} targets.");
 
             return _rootLogger;
         }

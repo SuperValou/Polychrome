@@ -1,0 +1,84 @@
+{
+  "app": "TmdbCrawler",
+  "version": "0.1.0",
+  "download": {
+    "source-root": "http://files.tmdb.org/p/exports",
+    "date": "default",
+    "ids": [
+      "movie_ids",
+      "tv_series_ids",
+      "person_ids",
+      "collection_ids",
+      "tv_network_ids",
+      "keyword_ids",
+      "production_company_ids"
+    ],
+    "source-filename": "{id}_{date:MM}_{date:DD}_{date:YYYY}.json.gz",
+    "output-filename": "default",
+    "output-folder": "default",
+    "skip-existing": true,
+    "keep-clean": true
+  },
+  "decompress": {
+    "source-files": [
+      "default"
+    ],
+    "output-folder": "default",
+    "skip-existing": true,
+    "keep-clean": true
+  },
+  "crawl": {
+    "source-files": [
+      "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/movie_ids_02_23_2020.json",
+      "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/production_company_ids_02_23_2020.json",
+      "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/keywords_ids_02_23_2020.json"
+    ],
+    "source-root": "https://api.themoviedb.org/3/",
+    "crawl-config": [
+      {
+        "skip": false,
+        "resource": "movie",
+        "append": "credits",
+        "filters": [
+          {
+            "property": "adult",
+            "type": "boolean",
+            "operator": "==",
+            "value": false
+          },
+          {
+            "property": "popularity",
+            "type": "number",
+            "operator": ">",
+            "value": 0.1
+          },
+          {
+            "property": "poster_path",
+            "type": "string",
+            "operator": "!empty"
+          },
+          {
+            "property": "cast",
+            "type": "collection",
+            "operator": "!empty"
+          }
+        ]
+      },
+      {
+        "skip": false,
+        "resource": "company",
+        "filter": {
+          "min-pognon": 5000
+        }
+      },
+      {
+        "skip": true,
+        "resource": ""
+      }
+    ],
+    "output-folder": "default",
+    "skip-existing": true,
+    "keep-clean": true
+  },
+  "graph": {}
+}

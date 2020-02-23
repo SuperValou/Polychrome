@@ -29,7 +29,11 @@ namespace ApplicationCore
 
         public void Initialize(ICollection<string> args)
         {
-
+            // parse args
+            // arm logger (logs --disable or logs --nofile)
+            // arm systems
+            // arm config (config -l or config -f "c:/here.config"
+            // arm other options (commit -m "stuff")
             throw new NotImplementedException();
         }
 

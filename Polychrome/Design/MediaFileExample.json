@@ -1,0 +1,23 @@
+{
+  "filehash": "some-hash",
+  "filesize": 4300200100,
+  "author": "some-guy",
+  "codec": "H264",
+  "resolution": "1980x720",
+  "extension": ".mp4",
+  "subtitles": {
+    "embedded": [
+      {
+        "language": "en",
+        "offset": 0.2
+      }
+    ],
+    "external": [
+      {
+        "language": "en",
+        "extension": ".srt",
+        "offset": 0.3
+      }
+    ]
+  }
+}

@@ -8,6 +8,7 @@ using LightLogs.Targets;
 
 namespace LightLogs.LogsManagement
 {
+    // TODO: add Enable/Disable
     internal class LogFlusher : ILogFlusher, IDisposable
     {
         private readonly Task _flushTask;

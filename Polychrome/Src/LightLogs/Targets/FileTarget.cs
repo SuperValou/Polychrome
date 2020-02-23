@@ -7,7 +7,7 @@ using LightLogs.Configs;
 namespace LightLogs.Targets
 {
     // TODO: improve
-    internal class FileTarget : ITarget
+    public class FileTarget : ITarget
     {
         private string _logFolder;
         private string _logFileName;
@@ -44,13 +44,12 @@ namespace LightLogs.Targets
             if (File.Exists(_logFilePath))
             {
                 _archiveFolderName = config.ArchiveFolderName;
+                // TODO: move old log file to archive folder
             }
 
             File.WriteAllText(_logFilePath, string.Empty);
         }
-
         
-
         public async Task Write(LogLevel level, char[] log)
         {
             using (FileStream stream = await OpenFileStream())
