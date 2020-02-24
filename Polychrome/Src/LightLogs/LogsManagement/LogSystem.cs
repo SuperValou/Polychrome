@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Kernel;
 using Kernel.Exceptions;
 using LightLogs.API;
@@ -12,7 +13,7 @@ namespace LightLogs.LogsManagement
     {
         private readonly ICollection<ITarget> _targets = new List<ITarget>();
         
-        private LogFlusher _logFlusher;
+        private ILogFlusher _logFlusher;
         private ILogger _rootLogger;
 
         public void AddDefaultConsoleTarget()
@@ -48,15 +49,25 @@ namespace LightLogs.LogsManagement
 
         public ILogger Initialize()
         {
-            string rootLoggerName = AppDomain.CurrentDomain.FriendlyName;
-            return Initialize(rootLoggerName);
+            return Initialize(LogLevel.Info);
         }
 
-        public ILogger Initialize(string rootLoggerName)
+        public ILogger Initialize(LogLevel minLogLevel)
+        {
+            string rootLoggerName = AppDomain.CurrentDomain.FriendlyName;
+            return Initialize(rootLoggerName, minLogLevel);
+        }
+
+        public ILogger Initialize(string rootLoggerName, LogLevel minLogLevel)
         {
             if (rootLoggerName == null)
             {
                 throw new ArgumentNullException(nameof(rootLoggerName));
+            }
+
+            if (!Enum.IsDefined(typeof(LogLevel), minLogLevel))
+            {
+                throw new InvalidEnumArgumentException(nameof(minLogLevel), (int) minLogLevel, typeof(LogLevel));
             }
             
             if (_rootLogger != null)
@@ -64,8 +75,8 @@ namespace LightLogs.LogsManagement
                 throw new AlreadyInitializedException(nameof(LogSystem));
             }
             
-            _logFlusher = new LogFlusher(_targets);
-            // TODO: _logFlusher.Enable();
+            _logFlusher = new LogFlusher(_targets, minLogLevel);
+            _logFlusher.Initialize();
             
             _rootLogger = new Logger(rootLoggerName, _logFlusher);
             _rootLogger.Debug($"{nameof(LogSystem)} armed, logging to {_targets.Count} targets.");

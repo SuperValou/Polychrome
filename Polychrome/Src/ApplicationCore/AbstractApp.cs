@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ApplicationCore.ArgParsing;
 using Kernel;
+using Kernel.Exceptions;
 using LightLogs.API;
 using LightLogs.LogsManagement;
 
@@ -9,13 +10,16 @@ namespace ApplicationCore
 {
     public abstract class AbstractApp
     {
+        private readonly ArgsParser _argsParser = new ArgsParser();
         private readonly ILogSystem _logSystem = new LogSystem();
-
-        protected ILogger Logger { get; }
+        
+        protected ILogger Logger { get; private set; }
 
         public string AppName { get; }
         public string Version { get; }
-              
+
+        public bool IsInitialized { get; private set; }
+        public bool IsRunning { get; private set; }
 
         protected AbstractApp(string appName, string version)
         {
@@ -41,18 +45,44 @@ namespace ApplicationCore
                 throw new ArgumentNullException(nameof(args));
             }
 
-            ParseArgs(args);
+            if (IsInitialized)
+            {
+                throw new AlreadyInitializedException(this.GetType().Name);
+            }
 
             // parse args
-            // arm logger (logs --disable or logs --nofile)
+            _argsParser.Parse(args);
+
+            // arm log system
+            if (_argsParser.HasError)
+            {
+                Logger = _logSystem.Initialize();
+                Logger.Fatal($"Invalid arguments: '{string.Join(" ", args)}'. {_argsParser.ErrorMessage}");
+                return;
+            }
+            
+            if (_argsParser.ParsedArgs.DisableLogs)
+            {
+                Logger = new EmptyLogger();
+            }
+            else
+            {
+                Logger = _logSystem.Initialize(_argsParser.ParsedArgs.MinLogLevel);
+            }
+
             // arm systems
-            // arm config (config -l or config -f "c:/here.config"
-            // arm other options (commit -m "stuff")
+            // arm config file
+            
             throw new NotImplementedException();
         }
 
         public void Boot()
         {
+            if (Logger == null)
+            {
+                throw new NotInitializedException(this.GetType().Name);
+            }
+
             throw new NotImplementedException();
         }
 

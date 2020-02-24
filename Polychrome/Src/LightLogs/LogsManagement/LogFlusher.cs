@@ -1,29 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Kernel.Exceptions;
 using LightLogs.API;
-using LightLogs.Targets;
 
 namespace LightLogs.LogsManagement
 {
-    // TODO: add Enable/Disable
     internal class LogFlusher : ILogFlusher, IDisposable
     {
-        private readonly Task _flushTask;
+        private readonly LogLevel _minLogLevel;
 
         private readonly object _lock = new object();
         private readonly ICollection<LogEvent> _logEvents = new List<LogEvent>();
         private readonly ICollection<ITarget> _targets = new List<ITarget>();
+
+        private Task _flushTask;
+
         private volatile bool _disabled = false;
 
-        internal LogFlusher(IEnumerable<ITarget> targets)
+        internal LogFlusher(IEnumerable<ITarget> targets, LogLevel minLogLevel)
         {
             if (targets == null)
             {
                 throw new ArgumentNullException(nameof(targets));
             }
+
+            if (!Enum.IsDefined(typeof(LogLevel), minLogLevel))
+            {
+                throw new InvalidEnumArgumentException(nameof(minLogLevel), (int) minLogLevel, typeof(LogLevel));
+            }
+
+            _minLogLevel = minLogLevel;
 
             foreach (ITarget target in targets)
             {
@@ -33,6 +43,14 @@ namespace LightLogs.LogsManagement
                 }
 
                 _targets.Add(target);
+            }
+        }
+
+        public void Initialize()
+        {
+            if (_flushTask != null)
+            {
+                throw new AlreadyInitializedException(nameof(LogFlusher));
             }
 
             _flushTask = Task.Factory.StartNew(FlushRoutine, TaskCreationOptions.LongRunning);
@@ -55,6 +73,11 @@ namespace LightLogs.LogsManagement
         public void AddLogEvent(LogEvent logEvent)
         {
             if (_disabled)
+            {
+                return;
+            }
+
+            if (logEvent.Level < _minLogLevel)
             {
                 return;
             }

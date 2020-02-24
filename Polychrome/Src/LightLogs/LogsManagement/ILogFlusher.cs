@@ -1,7 +1,10 @@
-﻿namespace LightLogs.LogsManagement
+﻿using System;
+
+namespace LightLogs.LogsManagement
 {
-    internal interface ILogFlusher
+    internal interface ILogFlusher : IDisposable
     {
         void AddLogEvent(LogEvent logEvent);
+        void Initialize();
     }
 }
