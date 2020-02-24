@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ApplicationCore.ArgParsing;
 using Kernel;
 using Kernel.Exceptions;
+using LightLogs;
 using LightLogs.API;
 using LightLogs.LogsManagement;
 
@@ -12,7 +13,9 @@ namespace ApplicationCore
     {
         private readonly ArgsParser _argsParser = new ArgsParser();
         private readonly ILogSystem _logSystem = new LogSystem();
-        
+
+        private bool _systemsReady = false;
+
         protected ILogger Logger { get; private set; }
 
         public string AppName { get; }
@@ -56,7 +59,7 @@ namespace ApplicationCore
             // arm log system
             if (_argsParser.HasError)
             {
-                Logger = _logSystem.Initialize();
+                Logger = _logSystem.Initialize(LogLevel.Fatal);
                 Logger.Fatal($"Invalid arguments: '{string.Join(" ", args)}'. {_argsParser.ErrorMessage}");
                 return;
             }
@@ -72,7 +75,8 @@ namespace ApplicationCore
 
             // arm systems
             // arm config file
-            
+
+            _systemsReady = true;
             throw new NotImplementedException();
         }
 
@@ -81,6 +85,12 @@ namespace ApplicationCore
             if (Logger == null)
             {
                 throw new NotInitializedException(this.GetType().Name);
+            }
+
+            if (!_systemsReady)
+            {
+                Logger.Error("Systems are not properly set up.");
+                return;
             }
 
             throw new NotImplementedException();

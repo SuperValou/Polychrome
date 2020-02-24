@@ -49,7 +49,7 @@ namespace LightLogs.LogsManagement
 
         public ILogger Initialize()
         {
-            return Initialize(LogLevel.Info);
+            return Initialize(LogLevel.Trace);
         }
 
         public ILogger Initialize(LogLevel minLogLevel)
