@@ -11,41 +11,8 @@ namespace LightLogs.LogsManagement
 {
     public class LogSystem : ILogSystem
     {
-        private readonly ICollection<ITarget> _targets = new List<ITarget>();
-        
         private ILogFlusher _logFlusher;
         private ILogger _rootLogger;
-
-        public void AddDefaultConsoleTarget()
-        {
-            var consoleTarget = new ConsoleTarget();
-            var consoleConfig = DefaultConfigFactory.GetDefaultConsoleTargetConfig();
-            consoleTarget.Initialize(consoleConfig);
-            AddTarget(consoleTarget);
-        }
-
-        public void AddDefaultFileTarget()
-        {
-            var fileTarget = new FileTarget();
-            var fileTargetConfig = DefaultConfigFactory.GetDefaultFileTargetConfig();
-            fileTarget.Initialize(fileTargetConfig);
-            AddTarget(fileTarget);
-        }
-
-        public void AddTarget(ITarget target)
-        {
-            if (target == null)
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
-
-            if (_rootLogger != null)
-            {
-                throw new AlreadyInitializedException(nameof(LogSystem), "Targets already set up.");
-            }
-
-            _targets.Add(target);
-        }
 
         public ILogger Initialize()
         {
@@ -60,26 +27,47 @@ namespace LightLogs.LogsManagement
 
         public ILogger Initialize(string rootLoggerName, LogLevel minLogLevel)
         {
+            ICollection<ITarget> defaultTargets = new List<ITarget>();
+            var consoleTarget = new ConsoleTarget();
+            var consoleConfig = DefaultConfigFactory.GetDefaultConsoleTargetConfig();
+            consoleTarget.Initialize(consoleConfig);
+            defaultTargets.Add(consoleTarget);
+
+            var fileTarget = new FileTarget();
+            var fileTargetConfig = DefaultConfigFactory.GetDefaultFileTargetConfig();
+            fileTarget.Initialize(fileTargetConfig);
+            defaultTargets.Add(fileTarget);
+
+            return Initialize(rootLoggerName, minLogLevel, defaultTargets);
+        }
+
+        public ILogger Initialize(string rootLoggerName, LogLevel minLogLevel, ICollection<ITarget> targets)
+        {
             if (rootLoggerName == null)
             {
                 throw new ArgumentNullException(nameof(rootLoggerName));
             }
-
+            
             if (!Enum.IsDefined(typeof(LogLevel), minLogLevel))
             {
                 throw new InvalidEnumArgumentException(nameof(minLogLevel), (int) minLogLevel, typeof(LogLevel));
             }
-            
+
+            if (targets == null)
+            {
+                throw new ArgumentNullException(nameof(targets));
+            }
+
             if (_rootLogger != null)
             {
                 throw new AlreadyInitializedException(nameof(LogSystem));
             }
             
-            _logFlusher = new LogFlusher(_targets, minLogLevel);
+            _logFlusher = new LogFlusher(targets, minLogLevel);
             _logFlusher.Initialize();
             
             _rootLogger = new Logger(rootLoggerName, _logFlusher);
-            _rootLogger.Debug($"{nameof(LogSystem)} armed, logging to {_targets.Count} targets.");
+            _rootLogger.Trace($"{nameof(LogSystem)} armed, logging to {targets.Count} targets.");
 
             return _rootLogger;
         }

@@ -95,10 +95,5 @@ namespace ApplicationCore
 
             throw new NotImplementedException();
         }
-
-        private void ParseArgs(ICollection<string> args)
-        {
-            throw new NotImplementedException();
-        }        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Kernel;
 
 namespace LightLogs.API
@@ -8,5 +9,6 @@ namespace LightLogs.API
         ILogger Initialize();
         ILogger Initialize(LogLevel minLogLevel);
         ILogger Initialize(string rootLoggerName, LogLevel minLogLevel);
+        ILogger Initialize(string rootLoggerName, LogLevel minLogLevel, ICollection<ITarget> targets);
     }
 }
