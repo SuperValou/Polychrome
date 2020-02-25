@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using ApplicationCore.ArgParsing;
+using ApplicationCore.Configurations;
 using Kernel;
 using Kernel.Exceptions;
 using LightLogs;
@@ -14,30 +17,34 @@ namespace ApplicationCore
         private readonly ArgsParser _argsParser = new ArgsParser();
         private readonly ILogSystem _logSystem = new LogSystem();
 
+        private IConfigManager _configManager;
+
         private bool _systemsReady = false;
 
         protected ILogger Logger { get; private set; }
 
+        
+
         public string AppName { get; }
-        public string Version { get; }
+        public string AppVersion { get; }
 
         public bool IsInitialized { get; private set; }
         public bool IsRunning { get; private set; }
 
-        protected AbstractApp(string appName, string version)
+        protected AbstractApp(string appName, string appVersion)
         {
             if (string.IsNullOrWhiteSpace(appName))
             {
                 throw new ArgumentException($"{nameof(appName)} cannot be null or empty.", nameof(appName));
             }
 
-            if (string.IsNullOrEmpty(version))
+            if (string.IsNullOrEmpty(appVersion))
             {
-                throw new ArgumentException($"{nameof(version)} cannot be null or empty.", nameof(version));
+                throw new ArgumentException($"{nameof(appVersion)} cannot be null or empty.", nameof(appVersion));
             }
 
             AppName = appName;
-            Version = version;
+            AppVersion = appVersion;
         }
 
 
@@ -72,13 +79,16 @@ namespace ApplicationCore
             {
                 Logger = _logSystem.Initialize(_argsParser.ParsedArgs.MinLogLevel);
             }
+            
+            // load config
+            _configManager = GetConfigManager();
+            _configManager.LoadConfig(_argsParser.ParsedArgs.ConfigPath);
 
-            // arm systems
-            // arm config file
-
+            // ready
             _systemsReady = true;
-            throw new NotImplementedException();
         }
+
+        protected abstract IConfigManager GetConfigManager();
 
         public void Boot()
         {
@@ -95,5 +105,10 @@ namespace ApplicationCore
 
             throw new NotImplementedException();
         }
+
+        
+        
+        
+
     }
 }

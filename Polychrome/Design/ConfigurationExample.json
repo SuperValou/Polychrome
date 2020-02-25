@@ -67,9 +67,14 @@
       {
         "skip": false,
         "resource": "company",
-        "filter": {
-          "min-pognon": 5000
-        }
+        "filters": [
+          {
+            "property": "adult",
+            "type": "boolean",
+            "operator": "==",
+            "value": false
+          }
+        ]
       },
       {
         "skip": true,
