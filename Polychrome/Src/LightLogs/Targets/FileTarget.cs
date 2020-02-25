@@ -11,13 +11,14 @@ namespace LightLogs.Targets
     {
         private string _logFolder;
         private string _logFileName;
-        private string _logFilePath;
-
+        
         private int _writeAttemps;
         private int _writeAttempsDelay;
 
         private string _archiveFolderName;
-        
+
+        public string LogFilePath { get; private set; }
+
         public FileTarget()
         {
         }
@@ -31,7 +32,7 @@ namespace LightLogs.Targets
 
             _logFolder = config.LogFolder;
             _logFileName = config.LogFileName;
-            _logFilePath = Path.Combine(_logFolder, _logFileName);
+            LogFilePath = Path.Combine(_logFolder, _logFileName);
 
             _writeAttemps = config.WriteAttempts;
             _writeAttempsDelay = config.WriteAttemptsDelay;
@@ -41,13 +42,13 @@ namespace LightLogs.Targets
                 Directory.CreateDirectory(_logFolder);
             }
 
-            if (File.Exists(_logFilePath))
+            if (File.Exists(LogFilePath))
             {
                 _archiveFolderName = config.ArchiveFolderName;
                 // TODO: move old log file to archive folder
             }
 
-            File.WriteAllText(_logFilePath, string.Empty);
+            File.WriteAllText(LogFilePath, string.Empty);
         }
         
         public async Task Write(LogLevel level, char[] log)
@@ -75,7 +76,7 @@ namespace LightLogs.Targets
                     FileShare fileShare = FileShare.ReadWrite | FileShare.Delete;
                     try
                     {
-                        FileStream fileStream = new FileStream(_logFilePath, FileMode.Append, FileAccess.Write, fileShare);
+                        FileStream fileStream = new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, fileShare);
                         return fileStream;
                     }
                     catch (DirectoryNotFoundException)
@@ -86,7 +87,7 @@ namespace LightLogs.Targets
                     catch (FileNotFoundException)
                     {
                         // file was deleted
-                        File.WriteAllText(_logFilePath, string.Empty);
+                        File.WriteAllText(LogFilePath, string.Empty);
                     }
                 }
                 catch (IOException)
@@ -95,7 +96,7 @@ namespace LightLogs.Targets
                 }
             }
 
-            throw new InvalidOperationException($"Unable to open filestream for \"{_logFilePath}\" after {_writeAttemps} attempts.");
+            throw new InvalidOperationException($"Unable to open filestream for \"{LogFilePath}\" after {_writeAttemps} attempts.");
         }
     }
 }

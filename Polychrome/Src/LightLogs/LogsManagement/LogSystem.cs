@@ -14,6 +14,8 @@ namespace LightLogs.LogsManagement
         private ILogFlusher _logFlusher;
         private ILogger _rootLogger;
 
+        public string DefaultLogFilePath { get; private set; } = string.Empty;
+
         public ILogger Initialize()
         {
             return Initialize(LogLevel.Trace);
@@ -28,6 +30,7 @@ namespace LightLogs.LogsManagement
         public ILogger Initialize(string rootLoggerName, LogLevel minLogLevel)
         {
             ICollection<ITarget> defaultTargets = new List<ITarget>();
+
             var consoleTarget = new ConsoleTarget();
             var consoleConfig = DefaultConfigFactory.GetDefaultConsoleTargetConfig();
             consoleTarget.Initialize(consoleConfig);
@@ -36,6 +39,7 @@ namespace LightLogs.LogsManagement
             var fileTarget = new FileTarget();
             var fileTargetConfig = DefaultConfigFactory.GetDefaultFileTargetConfig();
             fileTarget.Initialize(fileTargetConfig);
+            DefaultLogFilePath = fileTarget.LogFilePath;
             defaultTargets.Add(fileTarget);
 
             return Initialize(rootLoggerName, minLogLevel, defaultTargets);
@@ -43,11 +47,11 @@ namespace LightLogs.LogsManagement
 
         public ILogger Initialize(string rootLoggerName, LogLevel minLogLevel, ICollection<ITarget> targets)
         {
-            if (rootLoggerName == null)
+            if (string.IsNullOrEmpty(rootLoggerName))
             {
-                throw new ArgumentNullException(nameof(rootLoggerName));
+                throw new ArgumentException($"{nameof(rootLoggerName)} cannot be null or empty.", nameof(rootLoggerName));
             }
-            
+
             if (!Enum.IsDefined(typeof(LogLevel), minLogLevel))
             {
                 throw new InvalidEnumArgumentException(nameof(minLogLevel), (int) minLogLevel, typeof(LogLevel));
@@ -57,7 +61,7 @@ namespace LightLogs.LogsManagement
             {
                 throw new ArgumentNullException(nameof(targets));
             }
-
+            
             if (_rootLogger != null)
             {
                 throw new AlreadyInitializedException(nameof(LogSystem));
