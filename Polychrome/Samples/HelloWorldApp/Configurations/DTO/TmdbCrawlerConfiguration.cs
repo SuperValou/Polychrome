@@ -6,10 +6,10 @@ namespace HelloWorldApp.Configurations.DTO
     public class TmdbCrawlerConfiguration : IConfiguration
     {
         [JsonPropertyName("app")]
-        public string App { get; set; }
+        public string AppName { get; set; }
 
         [JsonPropertyName("version")]
-        public string Version { get; set; }
+        public string AppVersion { get; set; }
 
         [JsonPropertyName("download")]
         public Download Download { get; set; }

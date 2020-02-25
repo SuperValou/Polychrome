@@ -15,10 +15,10 @@ namespace ApplicationCore
         private readonly ArgsParser _argsParser = new ArgsParser();
         private readonly ILogSystem _logSystem = new LogSystem();
 
-        private IConfigManager _configManager;
+        private IConfigLoader _configLoader;
 
-        private bool _systemsReady = false;
-
+        private bool _alreadyInitialized = false;
+        
         protected ILogger Logger { get; private set; }
         
         public string AppName { get; }
@@ -51,10 +51,12 @@ namespace ApplicationCore
                 throw new ArgumentNullException(nameof(args));
             }
 
-            if (IsInitialized)
+            if (_alreadyInitialized)
             {
                 throw new AlreadyInitializedException(this.GetType().Name);
             }
+
+            _alreadyInitialized = true;
 
             // parse args
             _argsParser.Parse(args);
@@ -77,33 +79,54 @@ namespace ApplicationCore
             }
             
             // load config
-            _configManager = GetConfigManager();
-            _configManager.LoadConfig(_argsParser.ParsedArgs.ConfigPath);
+            _configLoader = GetConfigLoader();
+            IConfiguration config = _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new NullReferenceException($"Configuration cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
+            if (config.AppName != AppName)
+            {
+                Logger.Error($"{config.GetType().Name} is a configuration for unknown app '{config.AppName}' instead of {AppName}.");
+                return;
+            }
+
+            if (config.AppVersion != AppVersion)
+            {
+                Logger.Error($"{config.GetType().Name} is a configuration for {AppName} in unmanaged version '{config.AppVersion}'. " +
+                             $"Current version of {AppName} is {AppVersion}. Did you forget to update the configuration?");
+                return;
+            }
+
+            SetConfig(config);
+
+            // other systems
+
 
             // ready
-            _systemsReady = true;
+            IsInitialized = true;
+            Logger.Info($"{AppName} {AppVersion} initialized.");
         }
 
-        protected abstract IConfigManager GetConfigManager();
+        protected abstract void SetConfig(IConfiguration config);
 
-        public void Boot()
+        protected abstract IConfigLoader GetConfigLoader();
+
+        public virtual void Boot()
         {
             if (Logger == null)
             {
                 throw new NotInitializedException(this.GetType().Name);
             }
 
-            if (!_systemsReady)
+            if (!IsInitialized)
             {
-                Logger.Error("Systems are not properly set up.");
+                Logger.Error($"{AppName} {AppVersion} is not properly initialized.");
                 return;
             }
 
-            // vroom
-            Logger.Info("Hello world!");
+            Run();
         }
 
-        public void Dispose()
+        protected abstract void Run();
+
+        public virtual void Dispose()
         {
             _logSystem?.Dispose();
         }

@@ -2,8 +2,8 @@
 {
     public interface IConfiguration
     {
-        string App { get; }
+        string AppName { get; }
 
-        string Version { get; }
+        string AppVersion { get; }
     }
 }

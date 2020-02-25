@@ -6,13 +6,13 @@ using Kernel;
 
 namespace ApplicationCore.Configurations
 {
-    public class JsonConfigManager : IConfigManager
+    public class JsonConfigLoader : IConfigLoader
     {
         private readonly ILogger _logger;
         private readonly Type _configurationType;
         private readonly IConfiguration _defaultConfiguration;
         
-        public JsonConfigManager(ILogger logger, Type configurationType, IConfiguration defaultConfiguration)
+        public JsonConfigLoader(ILogger logger, Type configurationType, IConfiguration defaultConfiguration)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configurationType = configurationType ?? throw new ArgumentNullException(nameof(configurationType));
@@ -36,7 +36,7 @@ namespace ApplicationCore.Configurations
 
                 if (File.Exists(defaultConfigPath))
                 {
-                    loadedConfig = ReadConfig(defaultConfigPath);
+                    loadedConfig = ReadConfigFromJsonFile(defaultConfigPath);
                     
                 }
                 else
@@ -54,14 +54,14 @@ namespace ApplicationCore.Configurations
                 }
                 else
                 {
-                    loadedConfig = ReadConfig(configFilePath);
+                    loadedConfig = ReadConfigFromJsonFile(configFilePath);
                 }
             }
 
             return loadedConfig;
         }
 
-        private IConfiguration ReadConfig(string configFilePath)
+        private IConfiguration ReadConfigFromJsonFile(string configFilePath)
         {
             _logger.Debug("Reading config file at: " + configFilePath);
             

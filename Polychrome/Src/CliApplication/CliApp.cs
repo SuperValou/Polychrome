@@ -11,14 +11,14 @@ namespace CliApplication
         {
         }
 
-        protected override IConfigManager GetConfigManager()
+        protected override IConfigLoader GetConfigLoader()
         {
-            var configurationType = GetConfigurationType();
+            var configurationType = GetConfigType();
             var defaultConfig = new EmptyConfiguration(AppName, AppVersion);
-            var logger = Logger.CreateSubLogger(nameof(JsonConfigManager));
-            return new JsonConfigManager(logger, configurationType, defaultConfig);
+            var logger = Logger.CreateSubLogger(nameof(JsonConfigLoader));
+            return new JsonConfigLoader(logger, configurationType, defaultConfig);
         }
 
-        protected abstract Type GetConfigurationType();
+        protected abstract Type GetConfigType();
     }
 }

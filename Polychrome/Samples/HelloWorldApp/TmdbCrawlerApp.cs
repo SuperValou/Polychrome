@@ -1,4 +1,5 @@
 ﻿using System;
+using ApplicationCore.Configurations;
 using CliApplication;
 using HelloWorldApp.Configurations.DTO;
 
@@ -9,13 +10,25 @@ namespace HelloWorldApp
         private const string Name = "HelloWorldApp";
         private const string Version = "0.1.0";
 
+        private TmdbCrawlerConfiguration _config;
+
         public TmdbCrawlerApp() : base(Name, Version)
         {
         }
 
-        protected override Type GetConfigurationType()
+        protected override Type GetConfigType()
         {
             return typeof(TmdbCrawlerConfiguration);
+        }
+
+        protected override void SetConfig(IConfiguration config)
+        {
+            _config = (TmdbCrawlerConfiguration) config;
+        }
+
+        protected override void Run()
+        {
+            Logger.Info("Hello world!");
         }
     }
 }
