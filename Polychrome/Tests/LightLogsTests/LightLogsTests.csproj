@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Src\LightLogs\LightLogs.csproj" />
+    <ProjectReference Include="..\..\Src\LightLogs\LightLogs.csproj" />
   </ItemGroup>
 
 </Project>
