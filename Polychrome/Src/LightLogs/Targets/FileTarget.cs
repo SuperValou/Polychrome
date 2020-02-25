@@ -95,7 +95,7 @@ namespace LightLogs.Targets
                 }
             }
 
-            throw new InvalidOperationException("Should not be reached.");
+            throw new InvalidOperationException($"Unable to open filestream for \"{_logFilePath}\" after {_writeAttemps} attempts.");
         }
     }
 }

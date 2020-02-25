@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using ApplicationCore.ArgParsing;
 using ApplicationCore.Configurations;
 using Kernel;
@@ -12,7 +10,7 @@ using LightLogs.LogsManagement;
 
 namespace ApplicationCore
 {
-    public abstract class AbstractApp
+    public abstract class AbstractApp : IApp
     {
         private readonly ArgsParser _argsParser = new ArgsParser();
         private readonly ILogSystem _logSystem = new LogSystem();
@@ -22,9 +20,7 @@ namespace ApplicationCore
         private bool _systemsReady = false;
 
         protected ILogger Logger { get; private set; }
-
         
-
         public string AppName { get; }
         public string AppVersion { get; }
 
@@ -103,12 +99,13 @@ namespace ApplicationCore
                 return;
             }
 
-            throw new NotImplementedException();
+            // vroom
+            Logger.Info("Hello world!");
         }
 
-        
-        
-        
-
+        public void Dispose()
+        {
+            _logSystem?.Dispose();
+        }
     }
 }

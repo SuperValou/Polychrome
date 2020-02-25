@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,14 +9,14 @@ using LightLogs.API;
 
 namespace LightLogs.LogsManagement
 {
-    internal class LogFlusher : ILogFlusher, IDisposable
+    internal class LogFlusher : ILogFlusher
     {
         private readonly LogLevel _minLogLevel;
 
         private readonly object _lock = new object();
         private readonly ICollection<LogEvent> _logEvents = new List<LogEvent>();
         private readonly ICollection<ITarget> _targets = new List<ITarget>();
-
+        
         private Task _flushTask;
 
         private volatile bool _disabled = false;
@@ -53,11 +53,11 @@ namespace LightLogs.LogsManagement
                 throw new AlreadyInitializedException(nameof(LogFlusher));
             }
 
-            _flushTask = Task.Factory.StartNew(FlushRoutine, TaskCreationOptions.LongRunning);
+            _flushTask = Task.Run(FlushRoutine);
             _flushTask.ConfigureAwait(false);
         }
 
-        public virtual void Dispose()
+        public void Dispose()
         {
             _disabled = true;
             _flushTask.Wait();
@@ -105,6 +105,11 @@ namespace LightLogs.LogsManagement
             {
                 logEvents = new List<LogEvent>(_logEvents);
                 _logEvents.Clear();
+            }
+
+            if (logEvents.Count == 0)
+            {
+                return;
             }
 
             logEvents = logEvents.OrderBy(l => l.Timestamp).ToList();

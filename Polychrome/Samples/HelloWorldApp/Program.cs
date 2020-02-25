@@ -1,4 +1,5 @@
-﻿using CliApplication;
+﻿using System;
+using CliApplication;
 
 namespace HelloWorldApp
 {
@@ -9,6 +10,7 @@ namespace HelloWorldApp
             CliApp cliApp = new TmdbCrawlerApp();
             cliApp.Initialize(args);
             cliApp.Boot();
+            cliApp.Dispose();
         }
     }
 }

@@ -43,20 +43,17 @@ namespace LightLogs.Targets
                         break;
 
                     case LogLevel.Error:
-                        Console.Error.Write(log);
+                        Console.Error.WriteLine(log);
                         Console.ForegroundColor = _consoleTargetConfig.ErrorColor;                        
                         break;
 
                     case LogLevel.Fatal:
-                        Console.Error.Write(log);
+                        Console.Error.WriteLine(log);
                         Console.ForegroundColor = _consoleTargetConfig.FatalColor;
-                        break;
-
-                    default:                        
                         break;
                 }
 
-                Console.Write(log);
+                Console.WriteLine(log);
                 Console.ForegroundColor = oldColor;
             });
         }
