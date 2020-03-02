@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using ApplicationCore;
 using ApplicationCore.Configurations;
 using CliApplication;
 using HelloWorldApp.Configurations.DTO;
@@ -21,21 +23,24 @@ namespace HelloWorldApp
             return typeof(TmdbCrawlerConfiguration);
         }
 
-        protected override void Run(IConfiguration config)
+        protected override async Task<int> Run(IConfiguration config)
         {
             if (config == null)
             {
                 Logger.Fatal($"{nameof(config)} cannot be null.");
-                return;
+                return ExitCode.Error;
             }
-
-            Logger.Info("Hello world!");
 
             _config = config as TmdbCrawlerConfiguration;
             if (_config == null)
             {
-                Logger.Fatal
+                Logger.Fatal($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(TmdbCrawlerConfiguration)}.");
+                return ExitCode.Error;
             }
+
+            Logger.Info("Hello world!");
+            await Task.Yield();
+            return ExitCode.Success;
         }
     }
 }

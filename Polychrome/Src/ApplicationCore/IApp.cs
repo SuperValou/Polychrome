@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ApplicationCore
 {
@@ -9,5 +11,9 @@ namespace ApplicationCore
 
         bool IsInitialized { get; }
         bool IsRunning { get; }
+
+        void Initialize(ICollection<string> args);
+
+        Task<int> Run();
     }
 }

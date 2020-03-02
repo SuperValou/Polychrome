@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ApplicationCore.ArgParsing;
 using ApplicationCore.Configurations;
 using Kernel;
@@ -108,7 +109,7 @@ namespace ApplicationCore
         }
 
 
-        public virtual void Run()
+        public virtual async Task<int> Run()
         {
             if (Logger == null)
             {
@@ -118,10 +119,11 @@ namespace ApplicationCore
             if (!IsInitialized)
             {
                 Logger.Error($"{AppName} {AppVersion} is not properly initialized.");
-                return;
+                return ExitCode.Error;
             }
 
-            Run(_config);
+            int exitCode = await Run(_config);
+            return exitCode;
         }
 
         protected virtual IArgsParser GetArgsParser()
@@ -145,7 +147,7 @@ namespace ApplicationCore
 
         protected abstract Type GetConfigType();
 
-        protected abstract void Run(IConfiguration config);
+        protected abstract Task<int> Run(IConfiguration config);
 
         public virtual void Dispose()
         {
