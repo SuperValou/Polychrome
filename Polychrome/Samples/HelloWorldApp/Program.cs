@@ -9,7 +9,7 @@ namespace HelloWorldApp
         {
             CliApp cliApp = new TmdbCrawlerApp();
             cliApp.Initialize(args);
-            cliApp.Boot();
+            cliApp.Run();
             cliApp.Dispose();
         }
     }

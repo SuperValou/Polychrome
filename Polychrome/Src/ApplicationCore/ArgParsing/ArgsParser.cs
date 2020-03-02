@@ -5,7 +5,7 @@ using LightLogs;
 
 namespace ApplicationCore.ArgParsing
 {
-    public class ArgsParser
+    public class ArgsParser : IArgsParser
     {
         private const string Config = "-config";
         private const string Logs = "-logs";

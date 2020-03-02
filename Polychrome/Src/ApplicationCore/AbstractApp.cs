@@ -12,14 +12,17 @@ namespace ApplicationCore
 {
     public abstract class AbstractApp : IApp
     {
-        private readonly ArgsParser _argsParser = new ArgsParser();
         private readonly ILogSystem _logSystem = new LogSystem();
 
+        private IArgsParser _argsParser;
         private IConfigLoader _configLoader;
-
+        
+        private IConfiguration _config;
         private bool _alreadyInitialized = false;
         
         protected ILogger Logger { get; private set; }
+
+        
         
         public string AppName { get; }
         public string AppVersion { get; }
@@ -44,7 +47,7 @@ namespace ApplicationCore
         }
 
 
-        public void Initialize(ICollection<string> args)
+        public virtual void Initialize(ICollection<string> args)
         {
             if (args == null)
             {
@@ -59,6 +62,7 @@ namespace ApplicationCore
             _alreadyInitialized = true;
 
             // parse args
+            _argsParser = GetArgsParser() ?? throw new InvalidOperationException($"The {nameof(IArgsParser)} object returned by the {nameof(GetArgsParser)} method cannot be null.");
             _argsParser.Parse(args);
 
             // arm log system
@@ -79,22 +83,21 @@ namespace ApplicationCore
             }
             
             // load config
-            _configLoader = GetConfigLoader();
-            IConfiguration config = _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new NullReferenceException($"Configuration cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
-            if (config.AppName != AppName)
+            _configLoader = GetConfigLoader() ?? throw new InvalidOperationException($"The {nameof(IConfigLoader)} object returned by the {nameof(GetConfigLoader)} method cannot be null.");
+            _config = _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new InvalidOperationException($"The configuration object cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
+            if (_config.AppName != AppName)
             {
-                Logger.Error($"{config.GetType().Name} is a configuration for unknown app '{config.AppName}' instead of {AppName}.");
+                Logger.Error($"{_config.GetType().Name} is a configuration for unknown app '{_config.AppName}' instead of {AppName}.");
                 return;
             }
 
-            if (config.AppVersion != AppVersion)
+            if (_config.AppVersion != AppVersion)
             {
-                Logger.Error($"{config.GetType().Name} is a configuration for {AppName} in unmanaged version '{config.AppVersion}'. " +
+                Logger.Error($"{_config.GetType().Name} is a configuration for {AppName} in unmanaged version '{_config.AppVersion}'. " +
                              $"Current version of {AppName} is {AppVersion}. Did you forget to update the configuration?");
                 return;
             }
 
-            SetConfig(config);
 
             // other systems
 
@@ -104,11 +107,8 @@ namespace ApplicationCore
             Logger.Info($"{AppName} {AppVersion} initialized.");
         }
 
-        protected abstract void SetConfig(IConfiguration config);
 
-        protected abstract IConfigLoader GetConfigLoader();
-
-        public virtual void Boot()
+        public virtual void Run()
         {
             if (Logger == null)
             {
@@ -121,10 +121,31 @@ namespace ApplicationCore
                 return;
             }
 
-            Run();
+            Run(_config);
         }
 
-        protected abstract void Run();
+        protected virtual IArgsParser GetArgsParser()
+        {
+            var argsParser = new ArgsParser();
+            return argsParser;
+        }
+
+        protected virtual IConfigLoader GetConfigLoader()
+        {
+            Type configurationType = GetConfigType() ?? throw new InvalidOperationException($"Type returned by the {nameof(GetConfigType)} cannot be null.");
+            if (!typeof(IConfiguration).IsAssignableFrom(configurationType))
+            {
+                throw new InvalidOperationException($"Configuration type '{configurationType.FullName}' must implement the {nameof(IConfiguration)} interface.");
+            }
+
+            IConfiguration defaultConfig = new EmptyConfiguration(AppName, AppVersion);
+            ILogger logger = Logger.CreateSubLogger(nameof(JsonConfigLoader));
+            return new JsonConfigLoader(logger, configurationType, defaultConfig);
+        }
+
+        protected abstract Type GetConfigType();
+
+        protected abstract void Run(IConfiguration config);
 
         public virtual void Dispose()
         {

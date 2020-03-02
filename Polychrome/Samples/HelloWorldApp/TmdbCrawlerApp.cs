@@ -21,14 +21,21 @@ namespace HelloWorldApp
             return typeof(TmdbCrawlerConfiguration);
         }
 
-        protected override void SetConfig(IConfiguration config)
+        protected override void Run(IConfiguration config)
         {
-            _config = (TmdbCrawlerConfiguration) config;
-        }
+            if (config == null)
+            {
+                Logger.Fatal($"{nameof(config)} cannot be null.");
+                return;
+            }
 
-        protected override void Run()
-        {
             Logger.Info("Hello world!");
+
+            _config = config as TmdbCrawlerConfiguration;
+            if (_config == null)
+            {
+                Logger.Fatal
+            }
         }
     }
 }
