@@ -2,17 +2,18 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ApplicationCore.Operations
+namespace TaskSystem
 {
-    public abstract class AbstractOperation : IOperation
+    public abstract class AbstractTask : ITask
     {
         protected readonly ILogger Logger;
 
-        protected AbstractOperation(ILogger logger)
+        protected AbstractTask(ILogger logger)
         {
+            
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public abstract Task Execute();
+        public abstract Task Execute(IProgressReporter reporter);
     }
 }

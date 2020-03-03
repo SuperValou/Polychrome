@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Src\CliApplication\CliApplication.csproj" />
+    <ProjectReference Include="..\..\Src\TmdbService\TmdbService.csproj" />
   </ItemGroup>
 
 </Project>

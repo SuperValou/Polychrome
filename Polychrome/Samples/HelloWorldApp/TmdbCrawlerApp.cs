@@ -4,6 +4,7 @@ using ApplicationCore;
 using ApplicationCore.Configurations;
 using CliApplication;
 using HelloWorldApp.Configurations.DTO;
+using TmdbService.Configurations;
 
 namespace HelloWorldApp
 {
@@ -39,8 +40,9 @@ namespace HelloWorldApp
             }
 
             Logger.Info("Hello world!");
-            await Task.Yield();
+                                    
             return ExitCode.Success;
         }
+
     }
 }

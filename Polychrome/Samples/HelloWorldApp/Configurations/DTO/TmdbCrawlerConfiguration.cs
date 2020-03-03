@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ApplicationCore.Configurations;
+using TmdbService.Configurations;
 
 namespace HelloWorldApp.Configurations.DTO
 {
@@ -12,7 +13,7 @@ namespace HelloWorldApp.Configurations.DTO
         public string AppVersion { get; set; }
 
         [JsonPropertyName("download")]
-        public Download Download { get; set; }
+        public DownloadExportsConfig Download { get; set; }
 
         [JsonPropertyName("decompress")]
         public Decompress Decompress { get; set; }

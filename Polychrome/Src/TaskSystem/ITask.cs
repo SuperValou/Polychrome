@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 
-namespace ApplicationCore.Operations
+namespace TaskSystem
 {
-    public interface IOperation
+    public interface ITask
     {
-        Task Execute();
+        Task Execute(IProgressReporter reporter);
     }
 
-    public interface IOperationExecution
+    public interface ITaskExecution
     {
         void Cancel();
     }
