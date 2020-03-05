@@ -14,16 +14,18 @@ namespace ApplicationCore
     public abstract class AbstractApp : IApp
     {
         private readonly ILogSystem _logSystem = new LogSystem();
+        private readonly ICollection<IService> _services = new List<IService>();
 
         private IArgsParser _argsParser;
         private IConfigLoader _configLoader;
         
         private IConfiguration _config;
+        
         private bool _alreadyInitialized = false;
         
+
         protected ILogger Logger { get; private set; }
 
-        
         
         public string AppName { get; }
         public string AppVersion { get; }
@@ -48,7 +50,7 @@ namespace ApplicationCore
         }
 
 
-        public virtual void Initialize(ICollection<string> args)
+        public virtual async Task Initialize(ICollection<string> args)
         {
             if (args == null)
             {
@@ -99,15 +101,39 @@ namespace ApplicationCore
                 return;
             }
 
+            // initialize services
+            Logger.Debug($"Initializing services...");
+            ICollection<IService> services;
+            try
+            {
+                services = await InitializeServices(_config) ?? throw new InvalidOperationException($"The collection of {nameof(IService)} returned by the {nameof(InitializeServices)} method cannot be null. Did you intended to return an empty list instead?");
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Error while initializing services: {e.Message}", e);
+                return;
+            }
 
-            // other systems
+            foreach (var service in services)
+            {
+                if (service == null)
+                {
+                    throw new InvalidOperationException($"One of the service returned by the {nameof(InitializeServices)} method was null.");
+                }
 
+                if (!service.IsInitialized)
+                {
+                    Logger.Warn($"{service} is not initialized.");
+                }
+
+                _services.Add(service);
+            }
 
             // ready
             IsInitialized = true;
-            Logger.Info($"{AppName} {AppVersion} initialized.");
+            Logger.Debug($"{AppName} {AppVersion} initialized.");
         }
-
+               
 
         public virtual async Task<int> Run()
         {
@@ -147,11 +173,18 @@ namespace ApplicationCore
 
         protected abstract Type GetConfigType();
 
+        protected abstract Task<ICollection<IService>> InitializeServices(IConfiguration config);
+
         protected abstract Task<int> Run(IConfiguration config);
 
         public virtual void Dispose()
         {
-            _logSystem?.Dispose();
+            foreach (var service in _services)
+            {
+                service.Dispose();
+            }
+
+            _logSystem.Dispose();            
         }
     }
 }

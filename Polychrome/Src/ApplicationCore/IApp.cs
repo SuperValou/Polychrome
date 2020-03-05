@@ -12,7 +12,7 @@ namespace ApplicationCore
         bool IsInitialized { get; }
         bool IsRunning { get; }
 
-        void Initialize(ICollection<string> args);
+        Task Initialize(ICollection<string> args);
 
         Task<int> Run();
     }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ApplicationCore;
 using ApplicationCore.Configurations;
 using CliApplication;
 using HelloWorldApp.Configurations.DTO;
+using Kernel;
 using TmdbService.Configurations;
 
 namespace HelloWorldApp
@@ -24,6 +26,24 @@ namespace HelloWorldApp
             return typeof(TmdbCrawlerConfiguration);
         }
 
+        protected override async Task<ICollection<IService>> InitializeServices(IConfiguration config)
+        {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
+            _config = config as TmdbCrawlerConfiguration;
+            if (_config == null)
+            {
+                throw new ArgumentException($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(TmdbCrawlerConfiguration)}.", nameof(config));                
+            }
+
+            await Task.Yield();
+
+            return new List<IService>();
+        }
+
         protected override async Task<int> Run(IConfiguration config)
         {
             if (config == null)
@@ -40,7 +60,8 @@ namespace HelloWorldApp
             }
 
             Logger.Info("Hello world!");
-                                    
+            await Task.Yield();
+
             return ExitCode.Success;
         }
 
