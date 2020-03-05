@@ -2,42 +2,39 @@
   "app": "TmdbCrawler",
   "version": "0.1.0",
   "services": {
-	  "tmdb-service" : {
-		"exports-root": "http://files.tmdb.org/p/exports"
-	  },
+    "tmdb-service": {
+      "exports-root": "http://files.tmdb.org/p/exports"
+    }
   },
   "tasks": {
-		"dump-exports": {
-			"download": {    
-				"date": "default",
-				"ids": [
-				  "movie_ids",
-				  "tv_series_ids",
-				  "person_ids",
-				  "collection_ids",
-				  "tv_network_ids",
-				  "keyword_ids",
-				  "production_company_ids"
-				],
-				"output-filename": "default",
-				"output-folder": "default",
-				"skip-existing": true,
-				"keep-clean": true
-			  },
-			  "decompress": {
-				"source-files": [
-				  "default"
-				],
-				"output-folder": "default",
-				"skip-existing": true,
-				"keep-clean": true
-			  },
-			  "quick-filter": {
-			  }
-		}
-		
-  },  
-  
+    "dump-exports": {
+      "download": {
+        "date": "default",
+        "ids": [
+          "movie_ids",
+          "tv_series_ids",
+          "person_ids",
+          "collection_ids",
+          "tv_network_ids",
+          "keyword_ids",
+          "production_company_ids"
+        ],
+        "output-filename": "default",
+        "output-folder": "default",
+        "skip-existing": true,
+        "keep-clean": true
+      },
+      "decompress": {
+        "source-files": [
+          "default"
+        ],
+        "output-folder": "default",
+        "skip-existing": true,
+        "keep-clean": true
+      },
+      "quick-filter": {}
+    }
+  },
   "crawl": {
     "source-files": [
       "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/movie_ids_02_23_2020.json",

@@ -1,7 +1,9 @@
-﻿namespace ApplicationCore.Configurations
+﻿using System.Threading.Tasks;
+
+namespace ApplicationCore.Configurations
 {
     public interface IConfigLoader
     {
-         IConfiguration LoadConfig(string configFilePath);
+         Task<IConfiguration> LoadConfig(string configFilePath);
     }
 }

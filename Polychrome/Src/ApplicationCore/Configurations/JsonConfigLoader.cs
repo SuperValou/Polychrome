@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Kernel;
 
 namespace ApplicationCore.Configurations
@@ -19,7 +20,7 @@ namespace ApplicationCore.Configurations
             _defaultConfiguration = defaultConfiguration ?? throw new ArgumentNullException(nameof(defaultConfiguration));
         }
 
-        public IConfiguration LoadConfig(string configFilePath)
+        public async Task<IConfiguration> LoadConfig(string configFilePath)
         {
             if (configFilePath == null)
             {
@@ -36,8 +37,7 @@ namespace ApplicationCore.Configurations
 
                 if (File.Exists(defaultConfigPath))
                 {
-                    loadedConfig = ReadConfigFromJsonFile(defaultConfigPath);
-                    
+                    loadedConfig = await ReadConfigFromJsonFile(defaultConfigPath);                    
                 }
                 else
                 {
@@ -54,21 +54,25 @@ namespace ApplicationCore.Configurations
                 }
                 else
                 {
-                    loadedConfig = ReadConfigFromJsonFile(configFilePath);
+                    loadedConfig = await ReadConfigFromJsonFile(configFilePath);
                 }
             }
 
             return loadedConfig;
         }
 
-        private IConfiguration ReadConfigFromJsonFile(string configFilePath)
+        private async Task<IConfiguration> ReadConfigFromJsonFile(string configFilePath)
         {
             _logger.Debug("Reading config file at: " + configFilePath);
             
             try
             {
-                string configurationText = File.ReadAllText(configFilePath);
-                object configurationObject = JsonSerializer.Deserialize(configurationText, _configurationType);
+                object configurationObject;
+                using (var jsonStream = File.OpenRead(configFilePath))
+                {
+                    configurationObject = await JsonSerializer.DeserializeAsync(jsonStream, _configurationType);
+                }
+
                 IConfiguration configuration = (IConfiguration) configurationObject;
                 return configuration;
             }

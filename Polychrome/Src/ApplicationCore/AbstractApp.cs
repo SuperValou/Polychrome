@@ -87,7 +87,7 @@ namespace ApplicationCore
             
             // load config
             _configLoader = GetConfigLoader() ?? throw new InvalidOperationException($"The {nameof(IConfigLoader)} object returned by the {nameof(GetConfigLoader)} method cannot be null.");
-            _config = _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new InvalidOperationException($"The configuration object cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
+            _config = await _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new InvalidOperationException($"The configuration object cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
             if (_config.AppName != AppName)
             {
                 Logger.Error($"{_config.GetType().Name} is a configuration for unknown app '{_config.AppName}' instead of {AppName}.");
