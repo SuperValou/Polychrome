@@ -1,16 +1,16 @@
 {
-  "app": "TmdbCrawler",
-  "version": "0.1.0",
+  "app-name": "TmdbCrawler",
+  "app-version": "0.1.0",
   "services": {
-    "tmdb-service": {
+    "tmdb-service-config": {
       "exports-root": "http://files.tmdb.org/p/exports"
     }
   },
-  "tasks": {
+  "tasks-to-run": {
     "dump-exports": {
       "download": {
         "date": "default",
-        "ids": [
+        "id-types": [
           "movie_ids",
           "tv_series_ids",
           "person_ids",
@@ -33,65 +33,65 @@
         "keep-clean": true
       },
       "quick-filter": {}
-    }
-  },
-  "crawl": {
-    "source-files": [
-      "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/movie_ids_02_23_2020.json",
-      "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/production_company_ids_02_23_2020.json",
-      "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/keywords_ids_02_23_2020.json"
-    ],
-    "source-root": "https://api.themoviedb.org/3/",
-    "crawl-config": [
-      {
-        "skip": false,
-        "resource": "movie",
-        "append": "credits",
-        "filters": [
-          {
-            "property": "adult",
-            "type": "boolean",
-            "operator": "==",
-            "value": false
-          },
-          {
-            "property": "popularity",
-            "type": "number",
-            "operator": ">",
-            "value": 0.1
-          },
-          {
-            "property": "poster_path",
-            "type": "string",
-            "operator": "!empty"
-          },
-          {
-            "property": "cast",
-            "type": "collection",
-            "operator": "!empty"
-          }
-        ]
-      },
-      {
-        "skip": false,
-        "resource": "company",
-        "filters": [
-          {
-            "property": "adult",
-            "type": "boolean",
-            "operator": "==",
-            "value": false
-          }
-        ]
-      },
-      {
-        "skip": true,
-        "resource": ""
-      }
-    ],
-    "output-folder": "default",
-    "skip-existing": true,
-    "keep-clean": true
-  },
-  "graph": {}
+    },
+    "crawl": {
+      "source-files": [
+        "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/movie_ids_02_23_2020.json",
+        "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/production_company_ids_02_23_2020.json",
+        "{appdata}/Polychrome/TmdbCrawler/Tasks/decompress/keywords_ids_02_23_2020.json"
+      ],
+      "source-root": "https://api.themoviedb.org/3/",
+      "crawl-config": [
+        {
+          "skip": false,
+          "resource": "movie",
+          "append": "credits",
+          "filters": [
+            {
+              "property": "adult",
+              "type": "boolean",
+              "operator": "==",
+              "value": false
+            },
+            {
+              "property": "popularity",
+              "type": "number",
+              "operator": ">",
+              "value": 0.1
+            },
+            {
+              "property": "poster_path",
+              "type": "string",
+              "operator": "!empty"
+            },
+            {
+              "property": "cast",
+              "type": "collection",
+              "operator": "!empty"
+            }
+          ]
+        },
+        {
+          "skip": false,
+          "resource": "company",
+          "filters": [
+            {
+              "property": "adult",
+              "type": "boolean",
+              "operator": "==",
+              "value": false
+            }
+          ]
+        },
+        {
+          "skip": true,
+          "resource": ""
+        }
+      ],
+      "output-folder": "default",
+      "skip-existing": true,
+      "keep-clean": true
+    },
+    "graph": {}
+  }
 }

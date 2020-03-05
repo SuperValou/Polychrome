@@ -6,22 +6,16 @@ namespace HelloWorldApp.Configurations.DTO
 {
     public class TmdbCrawlerConfiguration : IConfiguration
     {
-        [JsonPropertyName("app")]
+        [JsonPropertyName("app-name")]
         public string AppName { get; set; }
 
-        [JsonPropertyName("version")]
+        [JsonPropertyName("app-version")]
         public string AppVersion { get; set; }
 
-        [JsonPropertyName("download")]
-        public DownloadExportsConfig Download { get; set; }
+        [JsonPropertyName("services")]
+        public Services Services { get; set; }
 
-        [JsonPropertyName("decompress")]
-        public Decompress Decompress { get; set; }
-
-        [JsonPropertyName("crawl")]
-        public Crawl Crawl { get; set; }
-
-        [JsonPropertyName("graph")]
-        public Graph Graph { get; set; }
+        [JsonPropertyName("tasks-to-run")]
+        public TasksToRun TasksToRun { get; set; }
     }
 }

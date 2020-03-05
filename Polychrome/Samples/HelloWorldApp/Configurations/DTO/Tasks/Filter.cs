@@ -2,7 +2,7 @@
 
 namespace HelloWorldApp.Configurations.DTO
 {
-    public class FilterElement
+    public class Filter
     {
         [JsonPropertyName("property")]
         public string Property { get; set; }

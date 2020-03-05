@@ -15,6 +15,6 @@ namespace HelloWorldApp.Configurations.DTO
         public string Append { get; set; }
 
         [JsonPropertyName("filters")]
-        public List<FilterElement> Filters { get; set; }
+        public List<Filter> Filters { get; set; }
     }
 }
