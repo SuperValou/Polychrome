@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ApplicationCore.Configurations;
-using TmdbService.Configurations;
+using HelloWorldApp.Configurations.DTO.Tasks;
 
 namespace HelloWorldApp.Configurations.DTO
 {

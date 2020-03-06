@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LightLogs.Configs
+﻿namespace LightLogs.Configs
 {
     public class FileTargetConfig
     {

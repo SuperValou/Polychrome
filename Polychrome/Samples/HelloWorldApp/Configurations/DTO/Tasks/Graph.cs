@@ -1,4 +1,4 @@
-﻿namespace HelloWorldApp.Configurations.DTO
+﻿namespace HelloWorldApp.Configurations.DTO.Tasks
 {
     public class Graph
     {

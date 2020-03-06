@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HelloWorldApp.Configurations.DTO
+namespace HelloWorldApp.Configurations.DTO.Tasks
 {
     public class DumpExports
     {

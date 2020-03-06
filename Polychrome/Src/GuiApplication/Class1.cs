@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GuiApplication
+﻿namespace GuiApplication
 {
     public class Class1
     {

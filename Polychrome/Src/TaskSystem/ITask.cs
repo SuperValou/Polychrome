@@ -6,14 +6,4 @@ namespace TaskSystem
     {
         Task Execute(IProgressReporter reporter);
     }
-
-    public interface ITaskExecution
-    {
-        void Cancel();
-    }
-
-    public interface IProgressReporter
-    {
-
-    }
 }
