@@ -6,7 +6,7 @@ using ApplicationCore.Configurations;
 using CliApplication;
 using HelloWorldApp.Configurations.DTO;
 using Kernel;
-using TmdbService.Configurations;
+using TmdbService;
 
 namespace HelloWorldApp
 {
@@ -39,9 +39,14 @@ namespace HelloWorldApp
                 throw new ArgumentException($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(TmdbCrawlerConfiguration)}.", nameof(config));                
             }
 
+            var services = new List<IService>();
+
+            // tmdb
+            var tmdbLogger = Logger.CreateSubLogger(nameof(TmdbService));
+            ITmdbService tmdbService = new TmdbServiceClient(tmdbLogger, null);
             await Task.Yield();
 
-            return new List<IService>();
+            return services;
         }
 
         protected override async Task<int> Run(IConfiguration config)
@@ -64,6 +69,5 @@ namespace HelloWorldApp
 
             return ExitCode.Success;
         }
-
     }
 }

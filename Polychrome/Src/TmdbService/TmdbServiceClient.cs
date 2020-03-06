@@ -7,13 +7,13 @@ using TmdbService.Exports;
 
 namespace TmdbService
 {
-    public class TmdbService : ITmdbService
+    public class TmdbServiceClient : ITmdbService
     {
         private readonly ILogger _logger;
         private readonly ITaskManager taskManager;
         private IExportManager _exportManager;
 
-        public TmdbService(ILogger logger, ITaskManager taskManager)
+        public TmdbServiceClient(ILogger logger, ITaskManager taskManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.taskManager = taskManager ?? throw new ArgumentNullException(nameof(taskManager));
