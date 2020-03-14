@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TMDbLib" Version="1.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Components\Kernel\Kernel.csproj" />
+    <ProjectReference Include="..\..\Components\TaskSystem\TaskSystem.csproj" />
+  </ItemGroup>
+
+</Project>

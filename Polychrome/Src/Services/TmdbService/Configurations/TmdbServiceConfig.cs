@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace TmdbService.Configurations
+namespace Tmdb.Service.Configurations
 {
     public class TmdbServiceConfig
     {

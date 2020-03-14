@@ -6,7 +6,7 @@ using ApplicationCore.Configurations;
 using CliApplication;
 using HelloWorldApp.Configurations.DTO;
 using Kernel;
-using TmdbService;
+using Tmdb.Service;
 
 namespace HelloWorldApp
 {
@@ -42,7 +42,7 @@ namespace HelloWorldApp
             var services = new List<IService>();
 
             // tmdb
-            var tmdbLogger = Logger.CreateSubLogger(nameof(TmdbService));
+            var tmdbLogger = Logger.CreateSubLogger(nameof(TmdbServiceClient));
             ITmdbService tmdbService = new TmdbServiceClient(tmdbLogger, null);
             await Task.Yield();
 

@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Src\CliApplication\CliApplication.csproj" />
-    <ProjectReference Include="..\..\Src\TmdbService\TmdbService.csproj" />
+    <ProjectReference Include="..\..\Components\CliApplication\CliApplication.csproj" />
+    <ProjectReference Include="..\..\Services\TmdbService\Tmdb.Service.csproj" />
   </ItemGroup>
 
 </Project>

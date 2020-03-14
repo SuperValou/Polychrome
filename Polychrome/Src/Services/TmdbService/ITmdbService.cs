@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using TmdbService.Configurations;
+using Tmdb.Service.Configurations;
 
-namespace TmdbService
+namespace Tmdb.Service
 {
     public interface ITmdbService
     {

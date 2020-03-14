@@ -2,12 +2,12 @@
 using System;
 using System.Threading.Tasks;
 using TaskSystem;
+using Tmdb.Service.Configurations;
+using Tmdb.Service.Exports;
 using TMDbLib.Client;
 using TMDbLib.Objects.Movies;
-using TmdbService.Configurations;
-using TmdbService.Exports;
 
-namespace TmdbService
+namespace Tmdb.Service
 {
     public class TmdbServiceClient : ITmdbService
     {
@@ -34,7 +34,7 @@ namespace TmdbService
 
         public async Task DumpExports(DownloadExportsConfig config)
         {
-            
+
             if (config.Date == "default")
             {
                 // blablabla
