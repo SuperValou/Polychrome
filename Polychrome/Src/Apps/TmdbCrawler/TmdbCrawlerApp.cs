@@ -12,7 +12,7 @@ namespace HelloWorldApp
 {
     public class TmdbCrawlerApp : CliApp
     {
-        private const string Name = "HelloWorldApp";
+        private const string Name = "TmdbCrawler";
         private const string Version = "0.1.0";
 
         private TmdbCrawlerConfiguration _config;
@@ -25,8 +25,8 @@ namespace HelloWorldApp
         {
             return typeof(TmdbCrawlerConfiguration);
         }
-
-        protected override async Task<ICollection<IService>> InitializeServices(IConfiguration config)
+        
+        protected override void ValidateConfig(IConfiguration config)
         {
             if (config == null)
             {
@@ -36,9 +36,12 @@ namespace HelloWorldApp
             _config = config as TmdbCrawlerConfiguration;
             if (_config == null)
             {
-                throw new ArgumentException($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(TmdbCrawlerConfiguration)}.", nameof(config));                
+                throw new ArgumentException($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(TmdbCrawlerConfiguration)}.", nameof(config));
             }
+        }
 
+        protected override async Task<ICollection<IService>> InitializeServices()
+        {
             var services = new List<IService>();
 
             // tmdb
@@ -49,21 +52,8 @@ namespace HelloWorldApp
             return services;
         }
 
-        protected override async Task<int> Run(IConfiguration config)
+        protected override async Task<int> RunMain()
         {
-            if (config == null)
-            {
-                Logger.Fatal($"{nameof(config)} cannot be null.");
-                return ExitCode.Error;
-            }
-
-            _config = config as TmdbCrawlerConfiguration;
-            if (_config == null)
-            {
-                Logger.Fatal($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(TmdbCrawlerConfiguration)}.");
-                return ExitCode.Error;
-            }
-
             Logger.Info("Hello world!");
             await Task.Yield();
 

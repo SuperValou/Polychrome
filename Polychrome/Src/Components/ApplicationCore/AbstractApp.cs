@@ -19,13 +19,9 @@ namespace ApplicationCore
         private IArgsParser _argsParser;
         private IConfigLoader _configLoader;
         
-        private IConfiguration _config;
-        
         private bool _alreadyInitialized = false;
         
-
         protected ILogger Logger { get; private set; }
-
         
         public string AppName { get; }
         public string AppVersion { get; }
@@ -87,26 +83,38 @@ namespace ApplicationCore
             
             // load config
             _configLoader = GetConfigLoader() ?? throw new InvalidOperationException($"The {nameof(IConfigLoader)} object returned by the {nameof(GetConfigLoader)} method cannot be null.");
-            _config = await _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new InvalidOperationException($"The configuration object cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
-            if (_config.AppName != AppName)
+            IConfiguration config = await _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new InvalidOperationException($"The configuration object cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
+
+            // validate config
+            if (config.AppName != AppName)
             {
-                Logger.Error($"{_config.GetType().Name} is a configuration for unknown app '{_config.AppName}' instead of {AppName}.");
+                Logger.Error($"{config.GetType().Name} is a configuration for unknown app '{config.AppName}' instead of {AppName}.");
                 return;
             }
 
-            if (_config.AppVersion != AppVersion)
+            if (config.AppVersion != AppVersion)
             {
-                Logger.Error($"{_config.GetType().Name} is a configuration for {AppName} in unmanaged version '{_config.AppVersion}'. " +
+                Logger.Error($"{config.GetType().Name} is a configuration for {AppName} in unmanaged version '{config.AppVersion}'. " +
                              $"Current version of {AppName} is {AppVersion}. Did you forget to update the configuration?");
                 return;
             }
 
+            try
+            {
+                ValidateConfig(config);
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Configuration error: {e.Message}", e);
+                return;
+            }
+            
             // initialize services
             Logger.Debug($"Initializing services...");
             ICollection<IService> services;
             try
             {
-                services = await InitializeServices(_config) ?? throw new InvalidOperationException($"The collection of {nameof(IService)} returned by the {nameof(InitializeServices)} method cannot be null. Did you intended to return an empty list instead?");
+                services = await InitializeServices() ?? throw new InvalidOperationException($"The collection of {nameof(IService)} returned by the {nameof(InitializeServices)} method cannot be null. Did you intended to return an empty list instead?");
             }
             catch (Exception e)
             {
@@ -148,7 +156,7 @@ namespace ApplicationCore
                 return ExitCode.Error;
             }
 
-            int exitCode = await Run(_config);
+            int exitCode = await RunMain();
             return exitCode;
         }
 
@@ -173,9 +181,11 @@ namespace ApplicationCore
 
         protected abstract Type GetConfigType();
 
-        protected abstract Task<ICollection<IService>> InitializeServices(IConfiguration config);
+        protected abstract void ValidateConfig(IConfiguration config);
 
-        protected abstract Task<int> Run(IConfiguration config);
+        protected abstract Task<ICollection<IService>> InitializeServices();
+
+        protected abstract Task<int> RunMain();
 
         public virtual void Dispose()
         {

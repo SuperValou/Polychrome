@@ -1,0 +1,12 @@
+{
+  "app-name": "MetaVid",
+  "app-version": "0.1.0",
+  "services": {
+    "tmdb-service": {
+      "exports-root": ""
+    }
+  },
+  "ffmpeg-path": "c:/here.exe",
+  "source-folder": "c:/here",
+  "destination-folder": "c:/overhere"
+}
