@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace MetaVid.Configurations
 {
@@ -13,11 +14,14 @@ namespace MetaVid.Configurations
         [JsonPropertyName("services")]
         public Services Services { get; set; }
 
-        [JsonPropertyName("ffmpeg-path")]
-        public string FfmpegPath { get; set; }
+        [JsonPropertyName("ffprobe-path")]
+        public string FfprobPath { get; set; }
 
         [JsonPropertyName("source-folder")]
         public string SourceFolder { get; set; }
+
+        [JsonPropertyName("source-extensions")]
+        public List<string> SourceExtensions { get; set; }
 
         [JsonPropertyName("destination-folder")]
         public string DestinationFolder { get; set; }

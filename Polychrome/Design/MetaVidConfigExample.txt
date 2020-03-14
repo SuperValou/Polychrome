@@ -6,7 +6,11 @@
       "exports-root": ""
     }
   },
-  "ffmpeg-path": "c:/here.exe",
+  "ffprobe-path": "c:/here.exe",
   "source-folder": "c:/here",
+  "source-extensions": [
+    ".mp4",
+    ".m4v"
+  ],
   "destination-folder": "c:/overhere"
 }
