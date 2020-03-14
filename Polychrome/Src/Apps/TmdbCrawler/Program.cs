@@ -11,7 +11,7 @@ namespace HelloWorldApp
             try
             {
                 CliApp cliApp = new TmdbCrawlerApp();
-                cliApp.Initialize(args);
+                await cliApp.Initialize(args);
                 int exitCode = await cliApp.Run();
                 cliApp.Dispose();
 

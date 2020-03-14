@@ -1,12 +1,30 @@
-﻿using System;
+﻿using CliApplication;
+using System;
+using System.Threading.Tasks;
 
 namespace MetaVid
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            try
+            {
+                CliApp cliApp = new MetaVidApp();
+                await cliApp.Initialize(args);
+                int exitCode = await cliApp.Run();
+                cliApp.Dispose();
+
+                return exitCode;
+            }
+            catch (Exception e)
+            {
+#if DEBUG                
+                throw new Exception("CRASH", e);
+#else
+                return ExitCode.Error;
+#endif
+            }
         }
     }
 }
