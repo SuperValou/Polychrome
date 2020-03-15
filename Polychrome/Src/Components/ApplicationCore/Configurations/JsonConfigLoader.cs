@@ -46,6 +46,7 @@ namespace ApplicationCore.Configurations
             }
             else
             {
+                configFilePath = Path.GetFullPath(configFilePath);
                 if (!File.Exists(configFilePath))
                 {
                     _logger.Error($"Config file was not found at \"{configFilePath}\". " +
