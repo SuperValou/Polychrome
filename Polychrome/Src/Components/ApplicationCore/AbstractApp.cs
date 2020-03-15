@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.ArgParsing;
 using ApplicationCore.Configurations;
@@ -8,6 +10,7 @@ using Kernel.Exceptions;
 using LightLogs;
 using LightLogs.API;
 using LightLogs.LogsManagement;
+using TaskSystem;
 
 namespace ApplicationCore
 {
@@ -22,6 +25,7 @@ namespace ApplicationCore
         private bool _alreadyInitialized = false;
         
         protected ILogger Logger { get; private set; }
+        protected ITaskManager TaskManager { get; private set; }
         
         public string AppName { get; }
         public string AppVersion { get; }
@@ -46,7 +50,7 @@ namespace ApplicationCore
         }
 
 
-        public virtual async Task Initialize(ICollection<string> args)
+        public async Task Initialize(ICollection<string> args)
         {
             if (args == null)
             {
@@ -80,12 +84,12 @@ namespace ApplicationCore
             {
                 Logger = _logSystem.Initialize(_argsParser.ParsedArgs.MinLogLevel);
             }
-            
+
             // load config
+            Logger.Debug($"Loading config...");
             _configLoader = GetConfigLoader() ?? throw new InvalidOperationException($"The {nameof(IConfigLoader)} object returned by the {nameof(GetConfigLoader)} method cannot be null.");
             IConfiguration config = await _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new InvalidOperationException($"The configuration object cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
-
-            // validate config
+                        
             if (config.AppName != AppName)
             {
                 Logger.Error($"{config.GetType().Name} is a configuration for unknown app '{config.AppName}' instead of {AppName}.");
@@ -108,7 +112,17 @@ namespace ApplicationCore
                 Logger.Error($"Configuration error: {e.Message}", e);
                 return;
             }
-            
+
+            Logger.Debug($"Loaded {config.GetType().Name}.");
+
+            // initialize task system
+            Logger.Debug($"Setting up task system...");
+            TaskManager = GetTaskManager() ?? throw new InvalidOperationException($"The {nameof(ITaskManager)} object returned by the {nameof(GetTaskManager)} method cannot be null.");
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string taskManagerDirectory = Path.Combine(appDataPath, "Polychrome", AppName, AppVersion);
+            TaskManager.Initialize(taskManagerDirectory);
+            Logger.Debug($"Task system ready.");
+
             // initialize services
             Logger.Debug($"Initializing services...");
             ICollection<IService> services;
@@ -137,18 +151,22 @@ namespace ApplicationCore
                 _services.Add(service);
             }
 
+            Logger.Debug($"Services ready.");
+
             // ready
             IsInitialized = true;
-            Logger.Debug($"{AppName} {AppVersion} initialized.");
+            Logger.Info($"{AppName} {AppVersion} initialized.");
         }
                
 
-        public virtual async Task<int> Run()
+        public async Task<int> Run()
         {
             if (Logger == null)
             {
                 throw new NotInitializedException(this.GetType().Name);
             }
+
+            Logger.Debug($"Running {AppName} {AppVersion}...");
 
             if (!IsInitialized)
             {
@@ -157,6 +175,7 @@ namespace ApplicationCore
             }
 
             int exitCode = await RunMain();
+            Logger.Info($"{AppName} {AppVersion} exited with code {exitCode}.");
             return exitCode;
         }
 
@@ -177,6 +196,12 @@ namespace ApplicationCore
             IConfiguration defaultConfig = new EmptyConfiguration(AppName, AppVersion);
             ILogger logger = Logger.CreateSubLogger(nameof(JsonConfigLoader));
             return new JsonConfigLoader(logger, configurationType, defaultConfig);
+        }
+
+        protected virtual ITaskManager GetTaskManager()
+        {
+            var logger = Logger.CreateSubLogger(nameof(TaskManager));
+            return new TaskManager(logger);
         }
 
         protected abstract Type GetConfigType();

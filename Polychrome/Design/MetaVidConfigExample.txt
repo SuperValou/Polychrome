@@ -1,16 +1,19 @@
 {
-  "app-name": "MetaVid",
-  "app-version": "0.1.0",
-  "services": {
-    "tmdb-service": {
-      "exports-root": ""
-    }
-  },
-  "ffprobe-path": "c:/here.exe",
-  "source-folder": "c:/here",
-  "source-extensions": [
-    ".mp4",
-    ".m4v"
-  ],
-  "destination-folder": "c:/overhere"
+	"app-name": "MetaVid",
+	"app-version": "0.1.0",
+	"services": {
+		"tmdb-service": {
+			"exports-root": ""
+		}
+	},
+	"task-list": {
+		"probe-task": {
+			"ffprobe-path": "c:/here.exe",
+			"source-folder": "c:/here",
+			"source-extensions": [
+				".mp4",
+				".m4v"
+			]
+		}
+	}
 }

@@ -3,6 +3,7 @@ using ApplicationCore.Configurations;
 using CliApplication;
 using Kernel;
 using MetaVid.Configurations;
+using MetaVid.Tasks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,16 +40,6 @@ namespace MetaVid
             {
                 throw new ArgumentException($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(MetaVidConfig)}.", nameof(config));
             }
-
-            if (!Directory.Exists(_config.SourceFolder))
-            {
-                throw new ArgumentException($"{nameof(_config.SourceFolder)} doesn't exist at '{_config.SourceFolder}'.");                
-            }
-
-            if (_config.SourceExtensions == null || _config.SourceExtensions.Count == 0 || _config.SourceExtensions.Any(ext => ext == null))
-            {
-                throw new ArgumentException($"{nameof(_config.SourceExtensions)} is null, empty, or contains a null item.", nameof(config));
-            }
         }
 
         protected override async Task<ICollection<IService>> InitializeServices()
@@ -59,19 +50,20 @@ namespace MetaVid
 
         protected override async Task<int> RunMain()
         {
-            ICollection<string> allowedExtension = new HashSet<string>(_config.SourceExtensions);
-            foreach (var filePath in Directory.EnumerateFiles(_config.SourceFolder, "*.*", SearchOption.AllDirectories))
+            if (_config.TaskList == null)
             {
-                string fileExt = Path.GetExtension(filePath);
-                if (!allowedExtension.Contains(fileExt))
-                {
-                    continue;
-                }
-
-
+                Logger.Warn("Noting to do.");
+                return ExitCode.Success;
             }
 
-            await Task.Yield();            
+            if (_config.TaskList.ProbeTaskSetup != null)
+            {
+                var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup);
+                //TaskManager.Schedule(probeTask);
+            }
+
+            
+            
             throw new NotImplementedException();
         }        
     }

@@ -7,11 +7,6 @@ namespace HelloWorldApp.Operations
 {
     public class SayHelloWorldOperation : AbstractTask
     {
-        public SayHelloWorldOperation(ILogger logger) : base(logger)
-        {
-
-        }
-
         public override Task Execute(IProgressReporter reporter)
         {
             
