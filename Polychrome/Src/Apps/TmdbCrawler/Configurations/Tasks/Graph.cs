@@ -1,4 +1,4 @@
-﻿namespace HelloWorldApp.Configurations.DTO.Tasks
+﻿namespace TmdbCrawler.Configurations.Tasks
 {
     public class Graph
     {

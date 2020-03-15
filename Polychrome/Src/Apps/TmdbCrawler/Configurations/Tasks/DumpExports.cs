@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HelloWorldApp.Configurations.DTO.Tasks
+namespace TmdbCrawler.Configurations.Tasks
 {
     public class DumpExports
     {

@@ -1,9 +1,9 @@
-﻿using Kernel;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using TaskSystem;
+using TaskSystem.Progresses;
+using TaskSystem.TaskObjects;
 
-namespace HelloWorldApp.Operations
+namespace TmdbCrawler.Operations
 {
     public class SayHelloWorldOperation : AbstractTask
     {

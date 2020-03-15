@@ -1,9 +1,7 @@
-﻿using Kernel;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using TaskSystem.Progresses;
 
-namespace TaskSystem
+namespace TaskSystem.TaskObjects
 {
     public abstract class AbstractTask : ITask
     {

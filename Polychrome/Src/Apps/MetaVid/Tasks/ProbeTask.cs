@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MetaVid.Configurations;
 using TaskSystem;
+using TaskSystem.Progresses;
+using TaskSystem.TaskObjects;
 
 namespace MetaVid.Tasks
 {

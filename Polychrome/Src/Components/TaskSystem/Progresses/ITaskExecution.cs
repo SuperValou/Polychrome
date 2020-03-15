@@ -1,4 +1,4 @@
-﻿namespace TaskSystem
+﻿namespace TaskSystem.Progresses
 {
     public interface ITaskExecution
     {

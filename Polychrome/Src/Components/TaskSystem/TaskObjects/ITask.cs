@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using TaskSystem.Progresses;
 
-namespace TaskSystem
+namespace TaskSystem.TaskObjects
 {
     public interface ITask
     {

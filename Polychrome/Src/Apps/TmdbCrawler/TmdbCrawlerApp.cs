@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using ApplicationCore;
 using ApplicationCore.Configurations;
 using CliApplication;
-using HelloWorldApp.Configurations.DTO;
 using Kernel;
 using Tmdb.Service;
+using TmdbCrawler.Configurations;
 
-namespace HelloWorldApp
+namespace TmdbCrawler
 {
     public class TmdbCrawlerApp : CliApp
     {

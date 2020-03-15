@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 using ApplicationCore.Configurations;
-using HelloWorldApp.Configurations.DTO.Tasks;
+using TmdbCrawler.Configurations.Tasks;
 
-namespace HelloWorldApp.Configurations.DTO
+namespace TmdbCrawler.Configurations
 {
     public class TmdbCrawlerConfiguration : IConfiguration
     {

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Tmdb.Service.Configurations;
 
-namespace HelloWorldApp.Configurations.DTO
+namespace TmdbCrawler.Configurations
 {
     public class Services
     {

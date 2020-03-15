@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using CliApplication;
 
-namespace HelloWorldApp
+namespace TmdbCrawler
 {
     public class Program
     {
