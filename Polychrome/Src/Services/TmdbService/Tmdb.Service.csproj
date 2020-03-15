@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Components\Kernel\Kernel.csproj" />
-    <ProjectReference Include="..\..\Components\TaskSystem\TaskSystem.csproj" />
   </ItemGroup>
 
 </Project>

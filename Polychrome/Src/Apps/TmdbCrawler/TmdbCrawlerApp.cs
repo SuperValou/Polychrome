@@ -46,7 +46,7 @@ namespace TmdbCrawler
 
             // tmdb
             var tmdbLogger = Logger.CreateSubLogger(nameof(TmdbServiceClient));
-            ITmdbService tmdbService = new TmdbServiceClient(tmdbLogger, null);
+            ITmdbService tmdbService = new TmdbServiceClient(tmdbLogger);
             await Task.Yield();
 
             return services;

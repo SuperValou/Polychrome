@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ApplicationCore.Configurations;
-using TmdbCrawler.Configurations.Tasks;
+using TmdbCrawler.Configurations.TaskConfigs;
 
 namespace TmdbCrawler.Configurations
 {

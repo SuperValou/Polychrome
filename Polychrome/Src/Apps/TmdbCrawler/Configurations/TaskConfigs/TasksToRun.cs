@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TmdbCrawler.Configurations.Tasks
+namespace TmdbCrawler.Configurations.TaskConfigs
 {
     public class TasksToRun
     {
