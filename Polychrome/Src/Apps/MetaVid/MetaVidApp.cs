@@ -62,7 +62,7 @@ namespace MetaVid
             string workingDirectory = _config.TaskList.WorkingDirectory;
             if (Directory.Exists(workingDirectory))
             {
-                Directory.Delete(workingDirectory);
+                Directory.Delete(workingDirectory, recursive: true);
             }
 
             Directory.CreateDirectory(workingDirectory);

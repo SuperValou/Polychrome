@@ -25,17 +25,19 @@ namespace ApplicationCore.Tasks
         {
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
-                FileName = _exePath,
-                Arguments = _args,
+                FileName = "cmd",
+                Verb = "runas",
+                Arguments = $"/C \"\"{_exePath}\" {_args}\"",
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardError = true,                
             };
 
-            _logger.Debug($"Running: {_exePath} {_args}");
+            _logger.Debug($"Running: {startInfo.FileName} {startInfo.Arguments}");
 
             var process = new Process() { StartInfo = startInfo };
+            process.EnableRaisingEvents = true;
             process.OutputDataReceived += LogOutput;
             process.ErrorDataReceived += LogError;
             process.Exited += EndAwait;
@@ -43,6 +45,9 @@ namespace ApplicationCore.Tasks
             try
             {
                 process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
                 await _semaphore.WaitAsync();
                 _logger.Debug($"Exit code: {process.ExitCode}");
             }
@@ -63,11 +68,21 @@ namespace ApplicationCore.Tasks
 
         private void LogOutput(object sender, DataReceivedEventArgs e)
         {
+            if (e.Data == null)
+            {
+                return;
+            }
+
             _logger.Debug($"STDOUT: {e.Data}");
         }
 
         private void LogError(object sender, DataReceivedEventArgs e)
         {
+            if (e.Data == null)
+            {
+                return;
+            }
+
             _logger.Error($"STDERR: {e.Data}");
         }
     }

@@ -32,8 +32,10 @@ namespace ApplicationCore.Configurations
             if (configFilePath == string.Empty)
             {
                 // use default location
-                string currentExePath = Assembly.GetExecutingAssembly().Location;
+                string currentExePath = Assembly.GetEntryAssembly().Location;
                 string defaultConfigPath = Path.ChangeExtension(currentExePath, ".config");
+
+                _logger.Debug("Attempting to use default config path: " + defaultConfigPath);
 
                 if (File.Exists(defaultConfigPath))
                 {

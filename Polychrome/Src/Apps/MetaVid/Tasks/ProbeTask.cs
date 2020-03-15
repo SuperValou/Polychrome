@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ namespace MetaVid.Tasks
     public class ProbeTask : ITask
     {
         private const string Pattern = "*.mp4";
-        private const string FfProbeCommand =  "-v error -print_format json -show_format -show_streams {0} > {1}"; // {0} is input path, {1} is output path
+        private const string FfProbeCommand =  "-v error -print_format json -show_format -show_streams \"{0}\" > \"{1}\""; // {0} is input path, {1} is output path
 
         private readonly ProbeTaskSetup _setup;
         private readonly ILogger _logger;
