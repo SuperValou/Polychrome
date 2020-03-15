@@ -11,16 +11,7 @@ namespace TmdbCrawler.Configurations.TaskConfigs
         [JsonPropertyName("id-types")]
         public List<string> IdTypes { get; set; }
 
-        [JsonPropertyName("output-filename")]
-        public string OutputFilename { get; set; }
-
-        [JsonPropertyName("output-folder")]
-        public string OutputFolder { get; set; }
-
-        [JsonPropertyName("skip-existing")]
-        public bool SkipExisting { get; set; }
-
-        [JsonPropertyName("keep-clean")]
-        public bool KeepClean { get; set; }
+        [JsonPropertyName("force")]
+        public bool Force { get; set; }
     }
 }

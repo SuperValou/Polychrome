@@ -9,7 +9,7 @@
   "tasks-to-run": {
     "dump-exports": {
       "download": {
-        "date": "default",
+        "date": "2020-03-10",
         "id-types": [
           "movie_ids",
           "tv_series_ids",
@@ -21,7 +21,7 @@
         ],
         "output-filename": "default",
         "output-folder": "default",
-        "skip-existing": true,
+        "force": false,
         "keep-clean": true
       },
       "decompress": {

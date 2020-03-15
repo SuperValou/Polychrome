@@ -2,7 +2,7 @@
 
 namespace TmdbCrawler.Configurations.TaskConfigs
 {
-    public class DumpExports
+    public class DumpExportsSetup
     {
         [JsonPropertyName("download")]
         public Download Download { get; set; }
@@ -11,6 +11,6 @@ namespace TmdbCrawler.Configurations.TaskConfigs
         public Decompress Decompress { get; set; }
 
         [JsonPropertyName("quick-filter")]
-        public Graph QuickFilter { get; set; }
+        public QuickFilter QuickFilter { get; set; }
     }
 }

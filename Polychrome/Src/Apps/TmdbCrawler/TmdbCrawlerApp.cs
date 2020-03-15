@@ -7,6 +7,8 @@ using CliApplication;
 using Kernel;
 using Tmdb.Service;
 using TmdbCrawler.Configurations;
+using TmdbCrawler.Configurations.TaskConfigs;
+using TmdbCrawler.Tasks;
 
 namespace TmdbCrawler
 {
@@ -16,6 +18,8 @@ namespace TmdbCrawler
         private const string Version = "0.1.0";
 
         private TmdbCrawlerConfiguration _config;
+
+        private ITmdbService _tmdbService;
 
         public TmdbCrawlerApp() : base(Name, Version)
         {
@@ -45,15 +49,19 @@ namespace TmdbCrawler
             var services = new List<IService>();
 
             // tmdb
-            var tmdbLogger = Logger.CreateSubLogger(nameof(TmdbServiceClient));
-            ITmdbService tmdbService = new TmdbServiceClient(tmdbLogger);
-            await Task.Yield();
+            var tmdbLogger = Logger.CreateSubLogger(nameof(TmdbService));
+            _tmdbService = new TmdbService(tmdbLogger);
+            await _tmdbService.Initialize(_config.Services.TmdbServiceConfig);
+
+            services.Add(_tmdbService);
 
             return services;
         }
 
         protected override async Task<int> RunMain()
         {
+            DumpExportsTask dumpExportsTask = new DumpExportsTask(_config.TasksToRun.DumpExports, _tmdbService);
+            
             Logger.Info("Hello world!");
             await Task.Yield();
 

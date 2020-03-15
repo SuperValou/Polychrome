@@ -9,7 +9,7 @@ using TaskSystem.TaskObjects;
 
 namespace MetaVid.Tasks
 {
-    public class ProbeTask : AbstractTask
+    public class ProbeTask : WorkingDirectoryTask
     {
         private const string FfProbeCommand =  "-v error -print_format json -show_format -show_streams {0} > {1}"; // {0} is input path, {1} is output path
 

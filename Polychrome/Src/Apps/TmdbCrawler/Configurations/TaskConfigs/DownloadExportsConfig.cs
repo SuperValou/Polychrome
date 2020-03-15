@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Tmdb.Service.Configurations
+namespace TmdbCrawler.Configurations.TaskConfigs
 {
     public class DownloadExportsConfig
     {
