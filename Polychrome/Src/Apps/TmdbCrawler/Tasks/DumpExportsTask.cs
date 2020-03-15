@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using Kernel;
 using TaskSystem.Progresses;
 using TaskSystem.TaskObjects;
 using Tmdb.Service;
@@ -10,26 +11,37 @@ using TmdbCrawler.Configurations.TaskConfigs;
 
 namespace TmdbCrawler.Tasks
 {
-    public class DumpExportsTask : WorkingDirectoryTask
+    public class DumpExportsTask : ITask
     {
         private readonly DumpExportsSetup _setup;
+        private readonly string _workingDirectory;
         private readonly ITmdbService _tmdbService;
 
-        public DumpExportsTask(DumpExportsSetup setup, ITmdbService tmdbService)
+        public DumpExportsTask(DumpExportsSetup setup, string workingDirectory, ITmdbService tmdbService)
         {
             _setup = setup ?? throw new ArgumentNullException(nameof(setup));
+            _workingDirectory = workingDirectory ?? throw new ArgumentNullException(nameof(workingDirectory));
             _tmdbService = tmdbService ?? throw new ArgumentNullException(nameof(tmdbService));
         }
 
-        public override async Task Execute(IProgressReporter reporter)
+        public async Task Execute(ILogger reporter)
         {
+            // TODO: working dir logic to extract
+            if (Directory.Exists(_workingDirectory))
+            {
+                Directory.Delete(_workingDirectory);
+            }
+
+            Directory.CreateDirectory(_workingDirectory);
+
             // download
             DateTime date = DateTime.Parse(_setup.Download.Date);
 
             ICollection<string> exportedArchivePaths = new List<string>();
             foreach (string idType in _setup.Download.IdTypes)
             {
-                string exportPath =  await _tmdbService.DownloadExport(idType, date, WorkingDirectory, _setup.Download.Force);
+                // TODO: cache?
+                string exportPath =  await _tmdbService.DownloadExport(idType, date, _workingDirectory, _setup.Download.Force);
                 exportedArchivePaths.Add(exportPath);
             }
 

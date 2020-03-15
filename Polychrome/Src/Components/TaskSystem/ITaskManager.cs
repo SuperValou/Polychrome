@@ -5,6 +5,8 @@ namespace TaskSystem
 {
     public interface ITaskManager
     {
+        string WorkingDirectory { get; }
+
         void Initialize(string workingDirectory);
 
         Task Run(ITask task);

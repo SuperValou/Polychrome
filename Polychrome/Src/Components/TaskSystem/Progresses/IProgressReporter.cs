@@ -2,8 +2,6 @@
 {
     public interface IProgressReporter
     {
-        void NotifyError(string errorMessage);
-
         int BeginStep(string message); // beginning 'message'...
 
         int BeginStep(string message, int substepCount);

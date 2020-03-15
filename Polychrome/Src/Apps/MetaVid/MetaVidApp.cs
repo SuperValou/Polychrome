@@ -58,9 +58,9 @@ namespace MetaVid
 
         protected override async Task<int> RunMain()
         {
-            var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup);
+            var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup, TaskManager.WorkingDirectory);
             await TaskManager.Run(probeTask);
-            throw new NotImplementedException();
+            return ExitCode.Success;
         }        
     }
 }

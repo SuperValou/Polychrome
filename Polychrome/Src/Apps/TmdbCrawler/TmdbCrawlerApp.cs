@@ -64,7 +64,7 @@ namespace TmdbCrawler
 
         protected override async Task<int> RunMain()
         {
-            DumpExportsTask dumpExportsTask = new DumpExportsTask(_config.TasksToRun.DumpExports, _tmdbService);
+            DumpExportsTask dumpExportsTask = new DumpExportsTask(_config.TasksToRun.DumpExports, TaskManager.WorkingDirectory, _tmdbService);
             
             Logger.Info("Hello world!");
             await Task.Yield();
