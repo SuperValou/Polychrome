@@ -121,10 +121,10 @@ namespace ApplicationCore
 
             // initialize services
             Logger.Debug($"Initializing services...");
-            ICollection<IService> services;
+            IAsyncEnumerable<IService> services;
             try
             {
-                services = await InitializeServices() ?? throw new InvalidOperationException($"The collection of {nameof(IService)} returned by the {nameof(InitializeServices)} method cannot be null. Did you intended to return an empty list instead?");
+                services = InitializeServices() ?? throw new InvalidOperationException($"The collection of {nameof(IService)} returned by the {nameof(InitializeServices)} method cannot be null. Did you intended to return an empty list instead?");
             }
             catch (Exception e)
             {
@@ -132,7 +132,7 @@ namespace ApplicationCore
                 return;
             }
 
-            foreach (var service in services)
+            await foreach (var service in services)
             {
                 if (service == null)
                 {
@@ -204,7 +204,7 @@ namespace ApplicationCore
 
         protected abstract bool ValidateConfig(IConfiguration config);
 
-        protected abstract Task<ICollection<IService>> InitializeServices();
+        protected abstract IAsyncEnumerable<IService> InitializeServices();
 
         protected abstract Task<int> RunMain();
 

@@ -52,18 +52,14 @@ namespace TmdbCrawler
             return true;
         }
 
-        protected override async Task<ICollection<IService>> InitializeServices()
+        protected override async IAsyncEnumerable<IService> InitializeServices()
         {
-            var services = new List<IService>();
-
             // tmdb
             var tmdbLogger = Logger.CreateSubLogger(nameof(TmdbService));
             _tmdbService = new TmdbService(tmdbLogger);
             await _tmdbService.Initialize(_config.Services.TmdbServiceConfig);
 
-            services.Add(_tmdbService);
-
-            return services;
+            yield return _tmdbService;
         }
 
         protected override async Task<int> RunMain()

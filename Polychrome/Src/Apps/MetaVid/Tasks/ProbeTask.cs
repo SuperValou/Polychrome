@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace MetaVid.Tasks
         {
             int stepId = reporter.BeginStep("Listing files");
             
-            ICollection<string> allowedExtension = new HashSet<string>(_setup.SourceExtensions.Where(ext => !string.IsNullOrEmpty(ext)));
+            ICollection<string> allowedExtension = new HashSet<string>(_setup.SourceExtensions);
             ICollection<string> filePaths = new List<string>();
             foreach (var filePath in Directory.EnumerateFiles(_setup.SourceFolder, "*.*", SearchOption.AllDirectories))
             {
@@ -45,12 +46,19 @@ namespace MetaVid.Tasks
             
             foreach (var filePath in filePaths)
             {
-                string outputPath = GetOutputPath();
-                //var startInfo = new ProcessStartInfo()
-                //{
-                //    FileName = _setup.FfProbePath,
-                //    Arguments = 
-                //}
+                string outputPath = "";
+                string args = string.Format(FfProbeCommand, filePath, outputPath);
+                var startInfo = new ProcessStartInfo()
+                {
+                    FileName = _setup.FfProbePath,
+                    Arguments = args
+                };
+
+                using (var process = new Process() {StartInfo = startInfo})
+                {
+                    process.Start();
+                    process.WaitForExit();
+                }
             }
 
             reporter.EndStep(stepId);
@@ -58,9 +66,5 @@ namespace MetaVid.Tasks
             throw new NotImplementedException();
         }
 
-        private string GetOutputPath()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

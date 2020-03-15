@@ -6,6 +6,7 @@ using MetaVid.Configurations;
 using MetaVid.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MetaVid
@@ -49,28 +50,16 @@ namespace MetaVid
             return true;
         }
 
-        protected override async Task<ICollection<IService>> InitializeServices()
+        protected override async IAsyncEnumerable<IService> InitializeServices()
         {
             await Task.Yield();
-            return new List<IService>();
+            yield break;
         }
 
         protected override async Task<int> RunMain()
         {
-            if (_config.TaskList == null)
-            {
-                Logger.Warn("Noting to do.");
-                return ExitCode.Success;
-            }
-
-            if (_config.TaskList.ProbeTaskSetup != null)
-            {
-                var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup);
-                //TaskManager.Schedule(probeTask);
-            }
-
-            
-            
+            var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup);
+            await TaskManager.Run(probeTask);
             throw new NotImplementedException();
         }        
     }
