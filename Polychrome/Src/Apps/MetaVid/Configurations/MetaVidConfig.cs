@@ -1,8 +1,9 @@
 ﻿using System.Text.Json.Serialization;
+using ApplicationCore.Configurations;
 
 namespace MetaVid.Configurations
 {
-    public class MetaVidConfig
+    public class MetaVidConfig : IConfiguration
     {
         [JsonPropertyName("app-name")]
         public string AppName { get; set; }

@@ -29,18 +29,27 @@ namespace TmdbCrawler
             return typeof(TmdbCrawlerConfiguration);
         }
         
-        protected override void ValidateConfig(IConfiguration config)
+        protected override bool ValidateConfig(IConfiguration config)
         {
             if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
 
+            if (config is EmptyConfiguration)
+            {
+                Logger.Error($"Configuration cannot be empty.");
+                return false;
+            }
+            
             _config = config as TmdbCrawlerConfiguration;
             if (_config == null)
             {
-                throw new ArgumentException($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(TmdbCrawlerConfiguration)}.", nameof(config));
+                Logger.Error($"{nameof(config)} was of invalid type {config.GetType().Name} instead of the expected type {nameof(TmdbCrawlerConfiguration)}");
+                return false;
             }
+
+            return true;
         }
 
         protected override async Task<ICollection<IService>> InitializeServices()

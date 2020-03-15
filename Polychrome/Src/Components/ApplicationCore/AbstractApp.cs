@@ -88,7 +88,7 @@ namespace ApplicationCore
             Logger.Debug($"Loading config...");
             _configLoader = GetConfigLoader() ?? throw new InvalidOperationException($"The {nameof(IConfigLoader)} object returned by the {nameof(GetConfigLoader)} method cannot be null.");
             IConfiguration config = await _configLoader.LoadConfig(_argsParser.ParsedArgs.ConfigPath) ?? throw new InvalidOperationException($"The configuration object cannot be null. Did you forget to use {nameof(EmptyConfiguration)} instead?");
-                        
+            
             if (config.AppName != AppName)
             {
                 Logger.Error($"{config.GetType().Name} is a configuration for unknown app '{config.AppName}' instead of {AppName}.");
@@ -102,16 +102,13 @@ namespace ApplicationCore
                 return;
             }
 
-            try
+
+            if (!ValidateConfig(config))
             {
-                ValidateConfig(config);
-            }
-            catch (Exception e)
-            {
-                Logger.Error($"Configuration error: {e.Message}", e);
+                Logger.Error("Configuration is not valid.");
                 return;
             }
-
+            
             Logger.Debug($"Loaded {config.GetType().Name}.");
 
             // initialize task system
@@ -205,7 +202,7 @@ namespace ApplicationCore
 
         protected abstract Type GetConfigType();
 
-        protected abstract void ValidateConfig(IConfiguration config);
+        protected abstract bool ValidateConfig(IConfiguration config);
 
         protected abstract Task<ICollection<IService>> InitializeServices();
 
