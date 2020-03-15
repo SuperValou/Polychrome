@@ -7,7 +7,6 @@ using CliApplication;
 using Kernel;
 using Tmdb.Service;
 using TmdbCrawler.Configurations;
-using TmdbCrawler.Configurations.TaskConfigs;
 using TmdbCrawler.Tasks;
 
 namespace TmdbCrawler

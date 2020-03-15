@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="TMDbLib" Version="1.6.0" />
+    <PackageReference Include="VerboseRestSharp" Version="0.8.0" />
   </ItemGroup>
 
   <ItemGroup>
