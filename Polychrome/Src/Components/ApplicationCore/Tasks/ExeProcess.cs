@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Kernel;
 
-namespace TaskSystem.Processes
+namespace ApplicationCore.Tasks
 {
     public class ExeProcess
     {
@@ -35,11 +35,11 @@ namespace TaskSystem.Processes
 
             _logger.Debug($"Running: {_exePath} {_args}");
 
-            var process = new Process() {StartInfo = startInfo};
+            var process = new Process() { StartInfo = startInfo };
             process.OutputDataReceived += LogOutput;
             process.ErrorDataReceived += LogError;
             process.Exited += EndAwait;
-            
+
             try
             {
                 process.Start();

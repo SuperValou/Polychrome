@@ -10,8 +10,5 @@ namespace MetaVid.Configurations
 
         [JsonPropertyName("source-folder")]
         public string SourceFolder { get; set; }
-
-        [JsonPropertyName("source-extensions")]
-        public List<string> SourceExtensions { get; set; }
     }
 }

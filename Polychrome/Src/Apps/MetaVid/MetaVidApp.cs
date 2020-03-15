@@ -6,6 +6,7 @@ using MetaVid.Configurations;
 using MetaVid.Tasks;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -58,8 +59,18 @@ namespace MetaVid
 
         protected override async Task<int> RunMain()
         {
-            var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup, TaskManager.WorkingDirectory);
-            await TaskManager.Run(probeTask);
+            string workingDirectory = _config.TaskList.WorkingDirectory;
+            if (Directory.Exists(workingDirectory))
+            {
+                Directory.Delete(workingDirectory);
+            }
+
+            Directory.CreateDirectory(workingDirectory);
+
+            var probeTasklogger = Logger.CreateSubLogger(nameof(ProbeTask));
+            var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup, probeTasklogger, workingDirectory);
+            await probeTask.Execute();
+
             return ExitCode.Success;
         }        
     }

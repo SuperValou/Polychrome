@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Kernel\Kernel.csproj" />
     <ProjectReference Include="..\LightLogs\LightLogs.csproj" />
-    <ProjectReference Include="..\TaskSystem\TaskSystem.csproj" />
   </ItemGroup>
 
 </Project>

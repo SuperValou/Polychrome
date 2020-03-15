@@ -7,13 +7,10 @@
 		}
 	},
 	"task-list": {
+		"working-directory": "c:/here/",
 		"probe-task": {
 			"ffprobe-path": "c:/here.exe",
-			"source-folder": "c:/here",
-			"source-extensions": [
-				".mp4",
-				".m4v"
-			]
+			"source-folder": "c:/here"			
 		}
 	}
 }

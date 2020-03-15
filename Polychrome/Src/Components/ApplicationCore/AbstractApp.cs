@@ -9,7 +9,6 @@ using Kernel.Exceptions;
 using LightLogs;
 using LightLogs.API;
 using LightLogs.LogsManagement;
-using TaskSystem;
 
 namespace ApplicationCore
 {
@@ -24,8 +23,7 @@ namespace ApplicationCore
         private bool _alreadyInitialized = false;
         
         protected ILogger Logger { get; private set; }
-        protected ITaskManager TaskManager { get; private set; }
-        
+                
         public string AppName { get; }
         public string AppVersion { get; }
 
@@ -111,14 +109,6 @@ namespace ApplicationCore
             
             Logger.Debug($"Loaded {config.GetType().Name}.");
 
-            // initialize task system
-            Logger.Debug($"Setting up task system...");
-            TaskManager = GetTaskManager() ?? throw new InvalidOperationException($"The {nameof(ITaskManager)} object returned by the {nameof(GetTaskManager)} method cannot be null.");
-            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string taskManagerDirectory = Path.Combine(appDataPath, "Polychrome", AppName, AppVersion);
-            TaskManager.Initialize(taskManagerDirectory);
-            Logger.Debug($"Task system ready.");
-
             // initialize services
             Logger.Debug($"Initializing services...");
             IAsyncEnumerable<IService> services;
@@ -192,12 +182,6 @@ namespace ApplicationCore
             IConfiguration defaultConfig = new EmptyConfiguration(AppName, AppVersion);
             ILogger logger = Logger.CreateSubLogger(nameof(JsonConfigLoader));
             return new JsonConfigLoader(logger, configurationType, defaultConfig);
-        }
-
-        protected virtual ITaskManager GetTaskManager()
-        {
-            var logger = Logger.CreateSubLogger(nameof(TaskManager));
-            return new TaskManager(logger);
         }
 
         protected abstract Type GetConfigType();

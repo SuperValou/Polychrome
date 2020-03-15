@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using ApplicationCore.Tasks;
 using Kernel;
-using TaskSystem.Progresses;
-using TaskSystem.TaskObjects;
 using Tmdb.Service;
 using TmdbCrawler.Configurations.TaskConfigs;
 
@@ -24,16 +23,8 @@ namespace TmdbCrawler.Tasks
             _tmdbService = tmdbService ?? throw new ArgumentNullException(nameof(tmdbService));
         }
 
-        public async Task Execute(ILogger reporter)
+        public async Task Execute()
         {
-            // TODO: working dir logic to extract
-            if (Directory.Exists(_workingDirectory))
-            {
-                Directory.Delete(_workingDirectory);
-            }
-
-            Directory.CreateDirectory(_workingDirectory);
-
             // download
             DateTime date = DateTime.Parse(_setup.Download.Date);
 

@@ -7,7 +7,6 @@ using CliApplication;
 using Kernel;
 using Tmdb.Service;
 using TmdbCrawler.Configurations;
-using TmdbCrawler.Tasks;
 
 namespace TmdbCrawler
 {
@@ -64,7 +63,7 @@ namespace TmdbCrawler
 
         protected override async Task<int> RunMain()
         {
-            DumpExportsTask dumpExportsTask = new DumpExportsTask(_config.TasksToRun.DumpExports, TaskManager.WorkingDirectory, _tmdbService);
+            //DumpExportsTask dumpExportsTask = new DumpExportsTask(_config.TasksToRun.DumpExports, ... , _tmdbService);
             
             Logger.Info("Hello world!");
             await Task.Yield();
