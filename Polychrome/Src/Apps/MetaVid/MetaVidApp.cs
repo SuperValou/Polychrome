@@ -66,7 +66,7 @@ namespace MetaVid
             }
 
             Directory.CreateDirectory(workingDirectory);
-
+            
             var probeTasklogger = Logger.CreateSubLogger(nameof(ProbeTask));
             var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup, probeTasklogger, workingDirectory);
             await probeTask.Execute();

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ApplicationCore.Tasks;
 using Kernel;
 using MetaVid.Configurations;
+using MetaVid.Tasks.ProbeDTO;
 
 namespace MetaVid.Tasks
 {
@@ -33,9 +35,9 @@ namespace MetaVid.Tasks
             foreach (var fileToProbe in Directory.EnumerateFiles(_setup.SourceFolder, Pattern, SearchOption.AllDirectories))
             {
                 string outputFileName = Path.GetFileNameWithoutExtension(fileToProbe);
-                string outputFilePath = Path.Combine(_workingDirectory, outputFileName + "-raw.json");
+                string ffprobeOutputFilePath = Path.Combine(_workingDirectory, outputFileName + "-raw.json");
 
-                string args = string.Format(FfProbeCommand, fileToProbe, outputFilePath);
+                string args = string.Format(FfProbeCommand, fileToProbe, ffprobeOutputFilePath);
 
                 bool success;
                 using (var process = new ExeProcess(ffprobeLogger, _setup.FfProbePath, args))
@@ -43,11 +45,27 @@ namespace MetaVid.Tasks
                     success = await process.Run();
                 }
 
-                if (success)
+                if (!success)
                 {
-                    _logger.Debug($"Generated '{outputFilePath}'");
-                    probedFileCount++;
+                    _logger.Debug($"Skipping '{fileToProbe}' because of error.");
+                    continue;
                 }
+
+                await using (var reader = File.OpenRead(ffprobeOutputFilePath))
+                {
+                    var probedData = await JsonSerializer.DeserializeAsync<ProbedData>(reader);
+
+                    string outputMetafilePath = Path.Combine(_workingDirectory, $"{outputFileName}.json");
+
+                    await using (var writer = File.Create(outputMetafilePath))
+                    {
+                        var options = new JsonSerializerOptions() {WriteIndented = true};
+                        await JsonSerializer.SerializeAsync(writer, probedData.Format, options);
+                    }
+                }
+
+                _logger.Debug($"Probed '{outputFileName}'");
+                probedFileCount++;
             }
 
             _logger.Info($"Probed {probedFileCount} files.");
