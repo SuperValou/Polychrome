@@ -57,7 +57,7 @@ namespace MetaVid.Tasks
                     continue;
                 }
 
-                string mediaId = _mediaDatabaseService.GetMediaId(fileToProbe);
+                string mediaId = await _mediaDatabaseService.GetMediaId(fileToProbe);
 
                 ProbedData probedData;
                 await using (var reader = File.OpenRead(ffprobeOutputFilePath))
@@ -65,11 +65,11 @@ namespace MetaVid.Tasks
                     probedData = await JsonSerializer.DeserializeAsync<ProbedData>(reader);
                 }
 
-                MediaInfo mediaInfo = _mediaDatabaseService.GetMediaInfo(mediaId);
+                MediaInfo mediaInfo = await _mediaDatabaseService.GetMediaInfo(mediaId);
 
                 mediaInfo = UpdateMediaInfoWithProbedData(mediaInfo, probedData);
 
-                _mediaDatabaseService.Update(mediaId, mediaInfo);
+                await _mediaDatabaseService.Update(mediaId, mediaInfo);
 
                 _logger.Debug($"Probed '{outputFileName}'");
                 probedFileCount++;

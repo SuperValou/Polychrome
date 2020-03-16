@@ -49,47 +49,11 @@ namespace LightLogsTests
         }
 
         [Test]
-        public void Initialize_ValidLoggerNameValidLogLevel_ReturnsNonNullLoggerWithLogFile()
-        {
-            var logger = _logSystem.Initialize("myLogger", LogLevel.Info);
-
-            Assert.IsNotNull(logger);
-            Assert.IsTrue(File.Exists(_logSystem.DefaultLogFilePath));
-        }
-
-        [Test]
-        public void Initialize_ValidLoggerNameValidLogLevelValidTargets_ReturnsNonNullLoggerWithoutLogFile()
-        {
-            var logger = _logSystem.Initialize("myLogger", LogLevel.Info, new List<ITarget>());
-
-            Assert.IsNotNull(logger);
-            Assert.AreEqual(string.Empty, _logSystem.DefaultLogFilePath);
-        }
-
-        [Test]
         public void Initialize_InvalidLogLevel_ThrowsException()
         {
             var logSystem = new LogSystem();
 
             Assert.Throws<InvalidEnumArgumentException>(() => logSystem.Initialize((LogLevel)int.MaxValue));
-        }
-
-        [Test]
-        public void Initialize_InvalidLoggerName_ThrowsException()
-        {
-            var logSystem = new LogSystem();
-
-            Assert.Throws<ArgumentException>(() => logSystem.Initialize(null, LogLevel.Warning));
-            Assert.Throws<ArgumentException>(() => logSystem.Initialize(string.Empty, LogLevel.Warning));
-        }
-
-        [Test]
-        public void Initialize_InvalidTargets_ThrowsException()
-        {
-            var logSystem = new LogSystem();
-
-            Assert.Throws<ArgumentNullException>(() => logSystem.Initialize("myLogger", LogLevel.Warning, null));
-            Assert.Throws<ArgumentException>(() =>  logSystem.Initialize("myLogger", LogLevel.Warning, new List<ITarget>() {null}));
         }
 
         [Test]
