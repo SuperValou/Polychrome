@@ -6,7 +6,7 @@ using Kernel;
 
 namespace ApplicationCore.Tasks
 {
-    public class ExeProcess
+    public class ExeProcess : IDisposable
     {
         private readonly ILogger _logger;
         private readonly string _exePath;
@@ -21,8 +21,9 @@ namespace ApplicationCore.Tasks
             _args = args ?? throw new ArgumentNullException(nameof(args));
         }
 
-        public async Task Run()
+        public async Task<bool> Run()
         {
+            // TODO: will only work on windows
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
                 FileName = "cmd",
@@ -42,6 +43,7 @@ namespace ApplicationCore.Tasks
             process.ErrorDataReceived += LogError;
             process.Exited += EndAwait;
 
+            bool success;
             try
             {
                 process.Start();
@@ -49,7 +51,12 @@ namespace ApplicationCore.Tasks
                 process.BeginErrorReadLine();
 
                 await _semaphore.WaitAsync();
-                _logger.Debug($"Exit code: {process.ExitCode}");
+                
+                success = process.ExitCode == 0;
+                if (!success)
+                {
+                    _logger.Warn($"Process exited with code: {process.ExitCode}");
+                }
             }
             finally
             {
@@ -58,6 +65,8 @@ namespace ApplicationCore.Tasks
                 process.Exited -= EndAwait;
                 process.Dispose();
             }
+
+            return success;
         }
 
         private void EndAwait(object sender, EventArgs e)
@@ -84,6 +93,11 @@ namespace ApplicationCore.Tasks
             }
 
             _logger.Error($"STDERR: {e.Data}");
+        }
+
+        public void Dispose()
+        {
+            _semaphore.Dispose();
         }
     }
 }

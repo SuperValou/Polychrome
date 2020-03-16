@@ -34,10 +34,16 @@ namespace MetaVid.Tasks
 
                 string args = string.Format(FfProbeCommand, fileToProbe, outputFilePath);
 
-                var process = new ExeProcess(ffprobeLogger, _setup.FfProbePath, args);
-                await process.Run();
+                bool success;
+                using (var process = new ExeProcess(ffprobeLogger, _setup.FfProbePath, args))
+                {
+                    success = await process.Run();
+                }
 
-                _logger.Debug($"Generated '{outputFilePath}'");
+                if (success)
+                {
+                    _logger.Debug($"Generated '{outputFilePath}'");
+                }
             }
         }
     }
