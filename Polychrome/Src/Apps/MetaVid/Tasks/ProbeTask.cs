@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -65,11 +66,19 @@ namespace MetaVid.Tasks
                     probedData = await JsonSerializer.DeserializeAsync<ProbedData>(reader);
                 }
 
-                MediaInfo mediaInfo = await _mediaDatabaseService.GetMediaInfo(mediaId);
+                MediaInfo mediaInfo = await _mediaDatabaseService.GetOrCreateMediaInfo(mediaId);
 
-                mediaInfo = UpdateMediaInfoWithProbedData(mediaInfo, probedData);
-
-                await _mediaDatabaseService.Update(mediaId, mediaInfo);
+                try
+                {
+                    mediaInfo = UpdateMediaInfoWithProbedData(mediaInfo, probedData);
+                }
+                catch (Exception e)
+                {
+                    _logger.Warn($"Unable to update media database for {mediaId}: " + e.Message, e);
+                    continue;
+                }
+                
+                await _mediaDatabaseService.UpdateMediaInfo(mediaId, mediaInfo);
 
                 _logger.Debug($"Probed '{outputFileName}'");
                 probedFileCount++;
@@ -83,8 +92,8 @@ namespace MetaVid.Tasks
             MediaInfo mediaInfo = mediaInfoSource.Clone();
 
             mediaInfo.Filename = probedData.Format.Filename;
-            mediaInfo.StartTime = float.Parse(probedData.Format.StartTime);
-            mediaInfo.Duration = float.Parse(probedData.Format.Duration);
+            mediaInfo.StartTime = float.Parse(probedData.Format.StartTime, CultureInfo.InvariantCulture.NumberFormat);
+            mediaInfo.Duration =  float.Parse(probedData.Format.Duration, CultureInfo.InvariantCulture.NumberFormat);
 
             // metadata
             mediaInfo.FileSize = long.Parse(probedData.Format.Size);
@@ -102,8 +111,8 @@ namespace MetaVid.Tasks
                 var videoStream = new VideoStream()
                 {
                     Index = probedVideoStream.Index,
-                    StartTime = float.Parse(probedVideoStream.StartTime),
-                    Duration = float.Parse(probedVideoStream.Duration),
+                    StartTime =  float.Parse(probedVideoStream.StartTime, CultureInfo.InvariantCulture.NumberFormat),
+                    Duration =  float.Parse(probedVideoStream.Duration, CultureInfo.InvariantCulture.NumberFormat),
                     CodecName = probedVideoStream.CodecName,
                     CodecTag = probedVideoStream.CodecTagString,
 
@@ -123,8 +132,8 @@ namespace MetaVid.Tasks
                 var audioStream = new AudioStream()
                 {
                     Index = probedAudioStream.Index,
-                    StartTime = float.Parse(probedAudioStream.StartTime),
-                    Duration = float.Parse(probedAudioStream.Duration),
+                    StartTime =  float.Parse(probedAudioStream.StartTime, CultureInfo.InvariantCulture.NumberFormat),
+                    Duration =  float.Parse(probedAudioStream.Duration, CultureInfo.InvariantCulture.NumberFormat),
                     CodecName = probedAudioStream.CodecName,
                     CodecTag = probedAudioStream.CodecTagString,
 
@@ -144,8 +153,8 @@ namespace MetaVid.Tasks
                 var subtitleStream = new SubtitleStream()
                 {
                     Index = probedSubtitleStream.Index,
-                    StartTime = float.Parse(probedSubtitleStream.StartTime),
-                    Duration = float.Parse(probedSubtitleStream.Duration),
+                    StartTime =  float.Parse(probedSubtitleStream.StartTime, CultureInfo.InvariantCulture.NumberFormat),
+                    Duration =  float.Parse(probedSubtitleStream.Duration, CultureInfo.InvariantCulture.NumberFormat),
                     CodecName = probedSubtitleStream.CodecName,
                     CodecTag = probedSubtitleStream.CodecTagString,
 

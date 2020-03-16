@@ -3,7 +3,8 @@
 	"app-version": "0.1.0",
 	"services": {
 		"media-database-service": {
-			"database-root": "c:/here"
+			"media-storage-path": "C:\\here",
+			"info-storage-path": "C:\\here"
 		}
 	},
 	"task-list": {

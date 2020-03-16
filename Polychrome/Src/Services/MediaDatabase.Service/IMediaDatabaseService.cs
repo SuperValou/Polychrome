@@ -11,8 +11,8 @@ namespace MediaDatabase.Service
 
         Task<string> GetMediaId(string mediaFilePath);
 
-        Task<MediaInfo> GetMediaInfo(string mediaId);
+        Task<MediaInfo> GetOrCreateMediaInfo(string mediaId);
 
-        Task Update(string mediaId, MediaInfo mediaInfo);
+        Task UpdateMediaInfo(string mediaId, MediaInfo mediaInfo);
     }
 }

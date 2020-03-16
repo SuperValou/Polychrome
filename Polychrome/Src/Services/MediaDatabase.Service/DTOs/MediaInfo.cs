@@ -21,13 +21,13 @@ namespace MediaDatabase.Service.DTOs
         public int NbStreams { get; set; }
 
         [JsonPropertyName("video-streams")]
-        public List<VideoStream> VideoStreams { get; set; }
+        public List<VideoStream> VideoStreams { get; set; } = new List<VideoStream>();
 
         [JsonPropertyName("audio-streams")]
-        public List<AudioStream> AudioStreams { get; set; }
+        public List<AudioStream> AudioStreams { get; set; } = new List<AudioStream>();
 
         [JsonPropertyName("subtitle-streams")]
-        public List<SubtitleStream> SubtitleStreams { get; set; }
+        public List<SubtitleStream> SubtitleStreams { get; set; } = new List<SubtitleStream>();
 
 
         [JsonPropertyName("file-size")]

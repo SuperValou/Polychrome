@@ -7,6 +7,7 @@ using MediaDatabase.Service.DTOs;
 
 namespace MediaDatabase.Service
 {
+    // TODO: currently assumes mediaId is source file name without extension
     public class MediaDatabaseService : IMediaDatabaseService
     {
         private string _mediaStoragePath;
@@ -14,38 +15,49 @@ namespace MediaDatabase.Service
 
         public bool IsInitialized { get; private set; }
 
-        public Task Initialize(MediaDatabaseServiceConfig config)
+        public async Task Initialize(MediaDatabaseServiceConfig config)
         {
-            return Task.Run(() =>
-            {
                 _mediaStoragePath = config.MediaStoragePath;
                 _infoStoragePath = config.InfoStoragePath;
 
+                if (!Directory.Exists(_infoStoragePath))
+                {
+                    Directory.CreateDirectory(_infoStoragePath);
+                }
+                
                 IsInitialized = true;
-            });
         }
 
         public Task<string> GetMediaId(string mediaFilePath)
         {
             return Task.Run(() =>
             {
-                return mediaFilePath;
+                return Path.GetFileNameWithoutExtension(mediaFilePath);
             });
         }
 
-        public Task<MediaInfo> GetMediaInfo(string mediaId)
+        public async Task<MediaInfo> GetOrCreateMediaInfo(string mediaId)
         {
-            return Task.Run(() =>
+            string mediaInfoFileName = $"{mediaId}.json";
+            string mediaInfoFilePath = Path.Combine(_mediaStoragePath, mediaInfoFileName);
+
+            if (!File.Exists(mediaInfoFilePath))
             {
                 return new MediaInfo();
-            });
+            }
+
+            MediaInfo mediaInfo;
+            await using (var reader = File.OpenRead(mediaInfoFilePath))
+            {
+                mediaInfo = await JsonSerializer.DeserializeAsync<MediaInfo>(reader);
+            }
+
+            return mediaInfo;
         }
 
-        public async Task Update(string mediaId, MediaInfo mediaInfo)
+        public async Task UpdateMediaInfo(string mediaId, MediaInfo mediaInfo)
         {
-            // TODO: currently assumes mediaId is source file path
-            string mediaInfoFileName = Path.GetFileNameWithoutExtension(mediaId);
-            string outputFilePath = Path.Combine(_infoStoragePath, $"{mediaInfoFileName}.json");
+            string outputFilePath = Path.Combine(_infoStoragePath, $"{mediaId}.json");
             
             await using (var writer = File.Create(outputFilePath))
             {
