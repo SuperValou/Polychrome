@@ -57,7 +57,7 @@ namespace MetaVid
         protected override async IAsyncEnumerable<IService> InitializeServices()
         {
             _mediaDatabaseService = new MediaDatabaseService();
-            await _mediaDatabaseService.Initialize();
+            await _mediaDatabaseService.Initialize(_config.Services.MediaDatabaseServiceConfig);
             yield return _mediaDatabaseService;
         }
 

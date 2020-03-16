@@ -2,21 +2,27 @@
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using MediaDatabase.Service.Configurations;
 using MediaDatabase.Service.DTOs;
 
 namespace MediaDatabase.Service
 {
     public class MediaDatabaseService : IMediaDatabaseService
     {
-        private string _binaryStoragePath;
+        private string _mediaStoragePath;
         private string _infoStoragePath;
 
         public bool IsInitialized { get; private set; }
 
-        public Task Initialize()
+        public Task Initialize(MediaDatabaseServiceConfig config)
         {
-            IsInitialized = true;
-            return Task.CompletedTask;
+            return Task.Run(() =>
+            {
+                _mediaStoragePath = config.MediaStoragePath;
+                _infoStoragePath = config.InfoStoragePath;
+
+                IsInitialized = true;
+            });
         }
 
         public Task<string> GetMediaId(string mediaFilePath)
@@ -25,7 +31,6 @@ namespace MediaDatabase.Service
             {
                 return mediaFilePath;
             });
-            
         }
 
         public Task<MediaInfo> GetMediaInfo(string mediaId)
