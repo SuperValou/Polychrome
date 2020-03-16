@@ -11,8 +11,6 @@ namespace LightLogs.LogsManagement
 {
     internal class LogFlusher : ILogFlusher
     {
-        private readonly LogLevel _minLogLevel;
-
         private readonly object _lock = new object();
         private readonly ICollection<LogEvent> _logEvents = new List<LogEvent>();
         private readonly ICollection<ITarget> _targets = new List<ITarget>();
@@ -21,20 +19,13 @@ namespace LightLogs.LogsManagement
 
         private volatile bool _disabled = false;
 
-        internal LogFlusher(IEnumerable<ITarget> targets, LogLevel minLogLevel)
+        internal LogFlusher(IEnumerable<ITarget> targets)
         {
             if (targets == null)
             {
                 throw new ArgumentNullException(nameof(targets));
             }
-
-            if (!Enum.IsDefined(typeof(LogLevel), minLogLevel))
-            {
-                throw new InvalidEnumArgumentException(nameof(minLogLevel), (int) minLogLevel, typeof(LogLevel));
-            }
-
-            _minLogLevel = minLogLevel;
-
+            
             foreach (ITarget target in targets)
             {
                 if (target == null)
@@ -76,12 +67,7 @@ namespace LightLogs.LogsManagement
             {
                 return;
             }
-
-            if (logEvent.Level < _minLogLevel)
-            {
-                return;
-            }
-
+            
             lock (_lock)
             {
                 _logEvents.Add(logEvent);
@@ -119,6 +105,10 @@ namespace LightLogs.LogsManagement
                 char[] log = GetLogChars(logEvent);
                 foreach (ITarget target in _targets)
                 {
+                    if (logEvent.Level < target.MinLogLevel)
+                    {
+                        continue;
+                    }
 #if DEBUG
                     await target.Write(logEvent.Level, log);
 #else

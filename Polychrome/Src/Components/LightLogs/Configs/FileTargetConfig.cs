@@ -6,6 +6,8 @@
        
         public string LogFileName { get; set; }
 
+        public LogLevel MinLogLevel { get; set; }
+
         public string ArchiveFolderName { get; set; }
 
         public int WriteAttempts { get; set; }

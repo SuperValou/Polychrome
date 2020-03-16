@@ -6,7 +6,6 @@ using LightLogs.Configs;
 
 namespace LightLogs.Targets
 {
-    // TODO: improve
     public class FileTarget : ITarget
     {
         private string _logFolder;
@@ -17,11 +16,9 @@ namespace LightLogs.Targets
 
         private string _archiveFolderName;
 
-        public string LogFilePath { get; private set; }
+        public LogLevel MinLogLevel { get; private set; }
 
-        public FileTarget()
-        {
-        }
+        public string LogFilePath { get; private set; }
 
         public void Initialize(FileTargetConfig config)
         {
@@ -34,8 +31,12 @@ namespace LightLogs.Targets
             _logFileName = config.LogFileName;
             LogFilePath = Path.Combine(_logFolder, _logFileName);
 
+            MinLogLevel = config.MinLogLevel;
+
             _writeAttemps = config.WriteAttempts;
             _writeAttempsDelay = config.WriteAttemptsDelay;
+
+            _archiveFolderName = config.ArchiveFolderName;
 
             if (!Directory.Exists(_logFolder))
             {
@@ -44,18 +45,17 @@ namespace LightLogs.Targets
 
             if (File.Exists(LogFilePath))
             {
-                _archiveFolderName = config.ArchiveFolderName;
                 // TODO: move old log file to archive folder
             }
 
             File.WriteAllText(LogFilePath, string.Empty);
         }
-        
+
         public async Task Write(LogLevel level, char[] log)
         {
-            using (FileStream stream = await OpenFileStream())
+            await using (FileStream stream = await OpenFileStream())
             {
-                using (var writer = new StreamWriter(stream))
+                await using (var writer = new StreamWriter(stream))
                 {
                     await writer.WriteAsync(log);
                 }
@@ -65,7 +65,6 @@ namespace LightLogs.Targets
         public void Dispose()
         {
         }
-
 
         private async Task<FileStream> OpenFileStream()
         {

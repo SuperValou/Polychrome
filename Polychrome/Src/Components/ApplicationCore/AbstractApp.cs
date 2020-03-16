@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -8,6 +8,7 @@ using Kernel;
 using Kernel.Exceptions;
 using LightLogs;
 using LightLogs.API;
+using LightLogs.Configs;
 using LightLogs.LogsManagement;
 
 namespace ApplicationCore
@@ -77,9 +78,13 @@ namespace ApplicationCore
             {
                 Logger = new EmptyLogger();
             }
+            else if (_argsParser.ParsedArgs.MinLogLevel.HasValue)
+            {
+                Logger = _logSystem.Initialize(_argsParser.ParsedArgs.MinLogLevel.Value);
+            }
             else
             {
-                Logger = _logSystem.Initialize(_argsParser.ParsedArgs.MinLogLevel);
+                Logger = _logSystem.Initialize();
             }
 
             // load config

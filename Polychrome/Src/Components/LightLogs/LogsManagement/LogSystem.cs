@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Kernel;
 using Kernel.Exceptions;
 using LightLogs.API;
@@ -18,16 +17,32 @@ namespace LightLogs.LogsManagement
 
         public ILogger Initialize()
         {
-            return Initialize(LogLevel.Trace);
+            string rootLoggerName = GetDefaultRootLoggerName();
+            return Initialize(rootLoggerName);
         }
 
         public ILogger Initialize(LogLevel minLogLevel)
         {
-            string rootLoggerName = AppDomain.CurrentDomain.FriendlyName;
-            return Initialize(rootLoggerName, minLogLevel);
+            ICollection<ITarget> defaultTargets = new List<ITarget>();
+
+            var consoleTarget = new ConsoleTarget();
+            var consoleConfig = DefaultConfigFactory.GetDefaultConsoleTargetConfig();
+            consoleConfig.MinLogLevel = minLogLevel;
+            consoleTarget.Initialize(consoleConfig);
+            defaultTargets.Add(consoleTarget);
+
+            var fileTarget = new FileTarget();
+            var fileTargetConfig = DefaultConfigFactory.GetDefaultFileTargetConfig();
+            fileTarget.Initialize(fileTargetConfig);
+            DefaultLogFilePath = fileTarget.LogFilePath;
+            defaultTargets.Add(fileTarget);
+
+            string rootLoggerName = GetDefaultRootLoggerName();
+
+            return Initialize(rootLoggerName, defaultTargets);
         }
 
-        public ILogger Initialize(string rootLoggerName, LogLevel minLogLevel)
+        public ILogger Initialize(string rootLoggerName)
         {
             ICollection<ITarget> defaultTargets = new List<ITarget>();
 
@@ -42,19 +57,20 @@ namespace LightLogs.LogsManagement
             DefaultLogFilePath = fileTarget.LogFilePath;
             defaultTargets.Add(fileTarget);
 
-            return Initialize(rootLoggerName, minLogLevel, defaultTargets);
+            return Initialize(rootLoggerName, defaultTargets);
         }
 
-        public ILogger Initialize(string rootLoggerName, LogLevel minLogLevel, ICollection<ITarget> targets)
+        public ILogger Initialize(ICollection<ITarget> targets)
+        {
+            string rootLoggerName = GetDefaultRootLoggerName();
+            return Initialize(rootLoggerName, targets);
+        }
+
+        public ILogger Initialize(string rootLoggerName, ICollection<ITarget> targets)
         {
             if (string.IsNullOrEmpty(rootLoggerName))
             {
                 throw new ArgumentException($"{nameof(rootLoggerName)} cannot be null or empty.", nameof(rootLoggerName));
-            }
-
-            if (!Enum.IsDefined(typeof(LogLevel), minLogLevel))
-            {
-                throw new InvalidEnumArgumentException(nameof(minLogLevel), (int) minLogLevel, typeof(LogLevel));
             }
 
             if (targets == null)
@@ -67,7 +83,7 @@ namespace LightLogs.LogsManagement
                 throw new AlreadyInitializedException(nameof(LogSystem));
             }
             
-            _logFlusher = new LogFlusher(targets, minLogLevel);
+            _logFlusher = new LogFlusher(targets);
             _logFlusher.Initialize();
             
             _rootLogger = new Logger(rootLoggerName, _logFlusher);
@@ -76,6 +92,12 @@ namespace LightLogs.LogsManagement
             return _rootLogger;
         }
 
+        private string GetDefaultRootLoggerName()
+        {
+            string rootLoggerName = AppDomain.CurrentDomain.FriendlyName;
+            return rootLoggerName;
+        }
+        
         public void Dispose()
         {
             _logFlusher?.Dispose();

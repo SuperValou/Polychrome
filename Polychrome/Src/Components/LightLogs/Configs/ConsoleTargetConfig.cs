@@ -4,6 +4,8 @@ namespace LightLogs.Configs
 {
     public class ConsoleTargetConfig
     {
+        public LogLevel MinLogLevel { get; set; }
+
         public ConsoleColor TraceColor { get; set; }
         public ConsoleColor DebugColor { get; set; }
         public ConsoleColor InfoColor { get; set; }

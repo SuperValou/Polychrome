@@ -10,7 +10,8 @@ namespace LightLogs.API
 
         ILogger Initialize();
         ILogger Initialize(LogLevel minLogLevel);
-        ILogger Initialize(string rootLoggerName, LogLevel minLogLevel);
-        ILogger Initialize(string rootLoggerName, LogLevel minLogLevel, ICollection<ITarget> targets);
+        ILogger Initialize(string rootLoggerName);
+        ILogger Initialize(ICollection<ITarget> targets);
+        ILogger Initialize(string rootLoggerName, ICollection<ITarget> targets);
     }
 }

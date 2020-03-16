@@ -26,7 +26,10 @@ namespace MetaVid.Tasks
         
         public async Task Execute()
         {
+            _logger.Info($"Probing {_setup.SourceFolder}...");
+
             ILogger ffprobeLogger = _logger.CreateSubLogger("FFProbe");
+            int probedFileCount = 0;
             foreach (var fileToProbe in Directory.EnumerateFiles(_setup.SourceFolder, Pattern, SearchOption.AllDirectories))
             {
                 string outputFileName = Path.GetFileNameWithoutExtension(fileToProbe);
@@ -43,8 +46,11 @@ namespace MetaVid.Tasks
                 if (success)
                 {
                     _logger.Debug($"Generated '{outputFilePath}'");
+                    probedFileCount++;
                 }
             }
+
+            _logger.Info($"Probed {probedFileCount} files.");
         }
     }
 }

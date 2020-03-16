@@ -114,7 +114,7 @@ namespace ApplicationCore.ArgParsing
 
             if (Enum.TryParse(typeof(LogLevel), secondArg, ignoreCase: true, out object minLogLevel))
             {
-                ParsedArgs.MinLogLevel = (LogLevel)minLogLevel;
+                ParsedArgs.MinLogLevel = (LogLevel) minLogLevel;
             }
             else if (secondArg == DisabledLogs)
             {
@@ -131,18 +131,7 @@ namespace ApplicationCore.ArgParsing
         {
             HasError = false;
             ErrorMessage = string.Empty;
-            ParsedArgs = GetDefaultAppArgs();
-        }
-
-        private AppArgs GetDefaultAppArgs()
-        {
-            var defaultAppArgs = new AppArgs()
-            {
-                ConfigPath = string.Empty,
-                MinLogLevel = LogLevel.Debug
-            };
-
-            return defaultAppArgs;
+            ParsedArgs = new AppArgs();
         }
     }
 }

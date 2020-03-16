@@ -8,6 +8,7 @@ namespace LightLogs.Configs
         {
             var config = new ConsoleTargetConfig()
             {
+                MinLogLevel = LogLevel.Info,
                 TraceColor = ConsoleColor.DarkGray,
                 DebugColor = ConsoleColor.Gray,
                 InfoColor = ConsoleColor.White,
@@ -26,6 +27,7 @@ namespace LightLogs.Configs
 
             var config = new FileTargetConfig()
             {
+                MinLogLevel = LogLevel.Debug,
                 LogFolder = defaultLogFolder,
                 ArchiveFolderName = "LogArchives",
                 LogFileName = defaultLogFileName,

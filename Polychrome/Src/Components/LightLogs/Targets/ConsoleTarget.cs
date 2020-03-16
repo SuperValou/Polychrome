@@ -7,15 +7,30 @@ namespace LightLogs.Targets
 {
     public class ConsoleTarget : ITarget
     {
-        private ConsoleTargetConfig _consoleTargetConfig;
+        private ConsoleColor _traceColor;
+        private ConsoleColor _debugColor;
+        private ConsoleColor _infoColor;
+        private ConsoleColor _warningColor;
+        private ConsoleColor _errorColor;
+        private ConsoleColor _fatalColor;
 
-        public ConsoleTarget()
-        {
-        }
+        public LogLevel MinLogLevel { get; private set; }
 
         public void Initialize(ConsoleTargetConfig consoleTargetConfig)
         {
-            _consoleTargetConfig = consoleTargetConfig ?? throw new ArgumentNullException(nameof(consoleTargetConfig));
+            if (consoleTargetConfig == null)
+            {
+                throw new ArgumentNullException(nameof(consoleTargetConfig));
+            }
+
+            MinLogLevel = consoleTargetConfig.MinLogLevel;
+
+            _traceColor = consoleTargetConfig.TraceColor;
+            _debugColor = consoleTargetConfig.DebugColor;
+            _infoColor = consoleTargetConfig.InfoColor;
+            _warningColor = consoleTargetConfig.WarningColor;
+            _errorColor = consoleTargetConfig.ErrorColor;
+            _fatalColor = consoleTargetConfig.FatalColor;
         }
 
         public Task Write(LogLevel level, char[] log)
@@ -27,33 +42,31 @@ namespace LightLogs.Targets
                 switch (level)
                 {
                     case LogLevel.Trace:
-                        Console.ForegroundColor = _consoleTargetConfig.TraceColor;
+                        Console.ForegroundColor = _traceColor;
                         break;
 
                     case LogLevel.Debug:
-                        Console.ForegroundColor = _consoleTargetConfig.DebugColor;
+                        Console.ForegroundColor = _debugColor;
                         break;
 
                     case LogLevel.Info:
-                        Console.ForegroundColor = _consoleTargetConfig.InfoColor;
+                        Console.ForegroundColor = _infoColor;
                         break;
 
                     case LogLevel.Warning:
-                        Console.ForegroundColor = _consoleTargetConfig.WarningColor;
+                        Console.ForegroundColor = _warningColor;
                         break;
 
                     case LogLevel.Error:
-                        //Console.Error.WriteLine(log);
-                        Console.ForegroundColor = _consoleTargetConfig.ErrorColor;                        
+                        Console.ForegroundColor = _errorColor;                        
                         break;
 
                     case LogLevel.Fatal:
-                        //Console.Error.WriteLine(log);
-                        Console.ForegroundColor = _consoleTargetConfig.FatalColor;
+                        Console.ForegroundColor = _fatalColor;
                         break;
                 }
 
-                Console.WriteLine(log);
+                Console.Write(log);
                 Console.ForegroundColor = oldColor;
             });
         }
