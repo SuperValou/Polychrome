@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ApplicationCore;
 using ApplicationCore.Configurations;
 using CliApplication;
 using Kernel;
+using MediaDatabase.Service;
 using SwapFusion.Configurations;
+using SwapFusion.Tasks;
 
 namespace SwapFusion
 {
@@ -14,6 +17,8 @@ namespace SwapFusion
         private const string Version = "0.1.0";
 
         private SwapFusionConfig _config;
+
+        private IMediaDatabaseService _mediaDatabaseService;
 
         public SwapFusionApp() : base(Name, Version)
         {
@@ -47,14 +52,20 @@ namespace SwapFusion
             return true;
         }
 
-        protected override IAsyncEnumerable<IService> InitializeServices()
+        protected override async IAsyncEnumerable<IService> InitializeServices()
         {
-            throw new NotImplementedException();
+            _mediaDatabaseService = new MediaDatabaseService();
+            await _mediaDatabaseService.Initialize(_config.Services.MediaDatabaseServiceConfig);
+            yield return _mediaDatabaseService;
         }
 
-        protected override Task<int> RunMain()
+        protected override async Task<int> RunMain()
         {
-            throw new NotImplementedException();
+            ILogger swpasLogger = Logger.CreateSubLogger(nameof(GenerateSwapsTask));
+            var swapsTask = new GenerateSwapsTask(swpasLogger, _config.TaskList.GenerateSwapsTaskSetup, _mediaDatabaseService);
+            await swapsTask.Initialize(_config.TaskList.WorkingDirectory);
+            await swapsTask.Execute();
+            return ExitCode.Success;
         }
     }
 }

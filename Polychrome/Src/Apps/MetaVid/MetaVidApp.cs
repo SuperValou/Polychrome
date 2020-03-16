@@ -63,18 +63,10 @@ namespace MetaVid
 
         protected override async Task<int> RunMain()
         {
-            // TODO: task working directory setup
-            string workingDirectory = _config.TaskList.WorkingDirectory;
-            if (Directory.Exists(workingDirectory))
-            {
-                Directory.Delete(workingDirectory, recursive: true);
-            }
-
-            Directory.CreateDirectory(workingDirectory);
-            
             // run tasks
             var probeTasklogger = Logger.CreateSubLogger(nameof(ProbeTask));
-            var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup, probeTasklogger, workingDirectory, _mediaDatabaseService);
+            var probeTask = new ProbeTask(probeTasklogger, _config.TaskList.ProbeTaskSetup, _mediaDatabaseService);
+            await probeTask.Initialize(_config.TaskList.WorkingDirectory);
             await probeTask.Execute();
 
             return ExitCode.Success;

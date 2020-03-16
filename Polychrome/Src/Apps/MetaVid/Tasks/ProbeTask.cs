@@ -15,34 +15,32 @@ using MetaVid.Tasks.ProbeDTO;
 
 namespace MetaVid.Tasks
 {
-    public class ProbeTask : ITask
+    public class ProbeTask : WorkingDirectoryTask
     {
         private const string Pattern = "*.mp4";
         private const string FfProbeCommand =  "-v error -print_format json -show_format -show_streams \"{0}\" > \"{1}\""; // {0} is input path, {1} is output path
 
         private readonly ProbeTaskSetup _setup;
-        private readonly ILogger _logger;
-        private readonly string _workingDirectory;
+
         private readonly IMediaDatabaseService _mediaDatabaseService;
 
-        public ProbeTask(ProbeTaskSetup setup, ILogger logger, string workingDirectory, IMediaDatabaseService mediaDatabaseService)
+        public ProbeTask(ILogger logger, ProbeTaskSetup setup, IMediaDatabaseService mediaDatabaseService)
+            : base(logger)
         {
             _setup = setup ?? throw new ArgumentNullException(nameof(setup));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _workingDirectory = workingDirectory ?? throw new ArgumentNullException(nameof(workingDirectory));
             _mediaDatabaseService = mediaDatabaseService ?? throw new ArgumentNullException(nameof(mediaDatabaseService));
         }
-        
-        public async Task Execute()
-        {
-            _logger.Info($"Probing {_setup.SourceFolder}...");
 
-            ILogger ffprobeLogger = _logger.CreateSubLogger("FFProbe");
+        public override async Task Execute()
+        {
+            Logger.Info($"Probing {_setup.SourceFolder}...");
+
+            ILogger ffprobeLogger = Logger.CreateSubLogger("FFProbe");
             int probedFileCount = 0;
             foreach (var fileToProbe in Directory.EnumerateFiles(_setup.SourceFolder, Pattern, SearchOption.AllDirectories))
             {
                 string outputFileName = Path.GetFileNameWithoutExtension(fileToProbe);
-                string ffprobeOutputFilePath = Path.Combine(_workingDirectory, outputFileName + "-raw.json");
+                string ffprobeOutputFilePath = Path.Combine(WorkingDirectory, outputFileName + "-raw.json");
 
                 string args = string.Format(FfProbeCommand, fileToProbe, ffprobeOutputFilePath);
 
@@ -54,7 +52,7 @@ namespace MetaVid.Tasks
 
                 if (!success)
                 {
-                    _logger.Debug($"Skipping '{fileToProbe}' because of error.");
+                    Logger.Debug($"Skipping '{fileToProbe}' because of error.");
                     continue;
                 }
 
@@ -74,17 +72,17 @@ namespace MetaVid.Tasks
                 }
                 catch (Exception e)
                 {
-                    _logger.Warn($"Unable to update media database for {mediaId}: " + e.Message, e);
+                    Logger.Warn($"Unable to update media database for {mediaId}: " + e.Message, e);
                     continue;
                 }
                 
                 await _mediaDatabaseService.UpdateMediaInfo(mediaId, mediaInfo);
 
-                _logger.Debug($"Probed '{outputFileName}'");
+                Logger.Debug($"Probed '{outputFileName}'");
                 probedFileCount++;
             }
 
-            _logger.Info($"Probed {probedFileCount} files.");
+            Logger.Info($"Probed {probedFileCount} files.");
         }
 
         private MediaInfo UpdateMediaInfoWithProbedData(MediaInfo mediaInfoSource, ProbedData probedData)

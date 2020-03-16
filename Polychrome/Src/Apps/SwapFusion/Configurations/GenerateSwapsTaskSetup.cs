@@ -2,7 +2,7 @@
 
 namespace SwapFusion.Configurations
 {
-    public class GenerateSwaps
+    public class GenerateSwapsTaskSetup
     {
         [JsonPropertyName("ffmpeg-path")]
         public string FfmpegPath { get; set; }

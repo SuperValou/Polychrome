@@ -8,6 +8,6 @@ namespace SwapFusion.Configurations
         public string WorkingDirectory { get; set; }
 
         [JsonPropertyName("generate-swaps")]
-        public GenerateSwaps GenerateSwaps { get; set; }
+        public GenerateSwapsTaskSetup GenerateSwapsTaskSetup { get; set; }
     }
 }
