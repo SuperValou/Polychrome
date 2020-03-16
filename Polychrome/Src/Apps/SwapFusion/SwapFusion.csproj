@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Components\CliApplication\CliApplication.csproj" />
-    <ProjectReference Include="..\..\Services\MediaDatabase.Service\MediaDatabase.Service.csproj" />
   </ItemGroup>
 
 </Project>

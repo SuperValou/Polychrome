@@ -1,0 +1,17 @@
+{
+	"app-name": "SwapFusion",
+	"app-version": "0.1.0",
+	"services": {
+		"media-database-service": {
+			"database-root": "c:/here"
+		}
+	},
+	"task-list": {
+		"working-directory": "c:/here/",
+		"generate-swaps": {
+			"ffmpeg-path": "c:/here.exe",
+			"swap-media-count": 5,
+			"swaps-per-media": 10
+		}
+	}
+}

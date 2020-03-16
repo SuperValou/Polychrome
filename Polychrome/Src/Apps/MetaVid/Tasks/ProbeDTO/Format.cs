@@ -8,7 +8,7 @@ namespace MetaVid.Tasks.ProbeDTO
         public string Filename { get; set; }
 
         [JsonPropertyName("nb_streams")]
-        public long NbStreams { get; set; }
+        public int NbStreams { get; set; }
 
         [JsonPropertyName("format_long_name")]
         public string FormatLongName { get; set; }

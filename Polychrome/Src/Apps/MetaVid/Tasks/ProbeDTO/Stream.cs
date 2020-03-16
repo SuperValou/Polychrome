@@ -37,10 +37,10 @@ namespace MetaVid.Tasks.ProbeDTO
         // VIDEO
 
         [JsonPropertyName("width")]
-        public long? Width { get; set; }
+        public int? Width { get; set; }
 
         [JsonPropertyName("height")]
-        public long? Height { get; set; }
+        public int? Height { get; set; }
 
         // "30/1", "0/0" for other than video
         [JsonPropertyName("avg_frame_rate")]

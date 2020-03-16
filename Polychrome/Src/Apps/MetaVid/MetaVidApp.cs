@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using MediaDatabase.Service;
 
 namespace MetaVid
 {
@@ -18,6 +19,8 @@ namespace MetaVid
         private const string Version = "0.1.0";
 
         private MetaVidConfig _config;
+
+        private IMediaDatabaseService _mediaDatabaseService;
 
         public MetaVidApp() : base(Name, Version)
         {
@@ -53,12 +56,14 @@ namespace MetaVid
 
         protected override async IAsyncEnumerable<IService> InitializeServices()
         {
-            await Task.Yield();
-            yield break;
+            _mediaDatabaseService = new MediaDatabaseService();
+            await _mediaDatabaseService.Initialize();
+            yield return _mediaDatabaseService;
         }
 
         protected override async Task<int> RunMain()
         {
+            // TODO: task working directory setup
             string workingDirectory = _config.TaskList.WorkingDirectory;
             if (Directory.Exists(workingDirectory))
             {
@@ -67,8 +72,9 @@ namespace MetaVid
 
             Directory.CreateDirectory(workingDirectory);
             
+            // run tasks
             var probeTasklogger = Logger.CreateSubLogger(nameof(ProbeTask));
-            var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup, probeTasklogger, workingDirectory);
+            var probeTask = new ProbeTask(_config.TaskList.ProbeTaskSetup, probeTasklogger, workingDirectory, _mediaDatabaseService);
             await probeTask.Execute();
 
             return ExitCode.Success;
