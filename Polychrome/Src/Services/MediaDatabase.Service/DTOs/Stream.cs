@@ -5,7 +5,7 @@ namespace MediaDatabase.Service.DTOs
     public class Stream
     {
         [JsonPropertyName("index")]
-        public long Index { get; set; }
+        public int Index { get; set; }
 
         [JsonPropertyName("start_time")]
         public float StartTime { get; set; }

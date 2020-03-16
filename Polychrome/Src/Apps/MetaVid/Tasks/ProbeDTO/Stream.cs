@@ -5,7 +5,7 @@ namespace MetaVid.Tasks.ProbeDTO
     public class Stream
     {
         [JsonPropertyName("index")]
-        public long Index { get; set; }
+        public int Index { get; set; }
 
         // "video", "audio", "subtitle"
         [JsonPropertyName("codec_type")]

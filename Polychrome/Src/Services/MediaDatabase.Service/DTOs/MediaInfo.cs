@@ -7,8 +7,8 @@ namespace MediaDatabase.Service.DTOs
 {
     public class MediaInfo
     {
-        [JsonPropertyName("filename")]
-        public string Filename { get; set; }
+        [JsonPropertyName("file-path")]
+        public string FilePath { get; set; }
         
         [JsonPropertyName("start-time")]
         public float StartTime { get; set; }

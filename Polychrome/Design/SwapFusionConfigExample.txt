@@ -11,8 +11,14 @@
 		"working-directory": "c:/here/",
 		"generate-swaps": {
 			"ffmpeg-path": "c:/here.exe",
-			"swap-media-count": 5,
-			"swaps-per-media": 10
+			"swap-duration": 120,
+			"couple-count": 5,
+			"swaps-per-couple": 10,
+			"use-media": [
+				"media-id-1",
+				"media-id-2"
+			],
+			"audio-language": "fra"
 		}
 	}
 }

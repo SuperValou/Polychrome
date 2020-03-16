@@ -35,7 +35,7 @@ namespace MetaVid.Tasks
         {
             Logger.Info($"Probing {_setup.SourceFolder}...");
 
-            ILogger ffprobeLogger = Logger.CreateSubLogger("FFProbe");
+            ILogger ffprobeLogger = Logger.CreateSubLogger("FFProbe.exe");
             int probedFileCount = 0;
             foreach (var fileToProbe in Directory.EnumerateFiles(_setup.SourceFolder, Pattern, SearchOption.AllDirectories))
             {
@@ -89,7 +89,7 @@ namespace MetaVid.Tasks
         {
             MediaInfo mediaInfo = mediaInfoSource.Clone();
 
-            mediaInfo.Filename = probedData.Format.Filename;
+            mediaInfo.FilePath = probedData.Format.Filename;
             mediaInfo.StartTime = float.Parse(probedData.Format.StartTime, CultureInfo.InvariantCulture.NumberFormat);
             mediaInfo.Duration =  float.Parse(probedData.Format.Duration, CultureInfo.InvariantCulture.NumberFormat);
 

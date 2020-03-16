@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SwapFusion.Configurations
 {
@@ -7,10 +8,19 @@ namespace SwapFusion.Configurations
         [JsonPropertyName("ffmpeg-path")]
         public string FfmpegPath { get; set; }
 
-        [JsonPropertyName("swap-media-count")]
-        public long SwapMediaCount { get; set; }
+        [JsonPropertyName("swap-duration")]
+        public int SwapDuration { get; set; }
 
-        [JsonPropertyName("swaps-per-media")]
-        public long SwapsPerMedia { get; set; }
+        [JsonPropertyName("couple-count")]
+        public int CoupleCount { get; set; }
+
+        [JsonPropertyName("swaps-per-couple")]
+        public int SwapsPerCouple { get; set; }
+
+        [JsonPropertyName("use-media")]
+        public List<string> UseMedia { get; set; }
+
+        [JsonPropertyName("audio-language")]
+        public string AudioLanguage { get; set; }
     }
 }
