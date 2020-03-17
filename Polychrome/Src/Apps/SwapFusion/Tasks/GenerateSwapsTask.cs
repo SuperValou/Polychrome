@@ -104,10 +104,6 @@ namespace SwapFusion.Tasks
                     }
                 }
             }
-            
-
-
-            throw new System.NotImplementedException();
         }
 
         private string GetFfmpegArgs(
@@ -115,10 +111,11 @@ namespace SwapFusion.Tasks
             string audioFilePath, int audioStreamIndex, string audioStartTimestamp,
             int duration, string outputFilePath)
         {
-            string args = $"-ss {videoStartTimestamp} -t {duration} -i \"{videoFilePath}\" " +
+            string args = $"-v error " +
+                          $"-ss {videoStartTimestamp} -t {duration} -i \"{videoFilePath}\" " +
                           $"-ss {audioStartTimestamp} -t {duration} -i \"{audioFilePath}\" " +
-                          $"-map 0:v: {videoStreamIndex} -c:v copy " + // video stream
-                          $"-map 1:a: {audioStreamIndex} -c:a copy " + // audio stream
+                          $"-map 0:{videoStreamIndex} -c:v copy " + // video stream
+                          $"-map 1:{audioStreamIndex} -c:a copy " + // audio stream
                           $"\"{outputFilePath}\""; // output
 
             return args;

@@ -45,7 +45,7 @@ namespace MediaDatabase.Service
             return Task.Run(() =>
             {
                 ICollection<string> mediaIds = new List<string>();
-                foreach (var mediaFile in Directory.EnumerateDirectories(_mediaStoragePath, "*.mp4",  SearchOption.AllDirectories))
+                foreach (var mediaFile in Directory.EnumerateFiles(_mediaStoragePath, "*.mp4",  SearchOption.AllDirectories))
                 {
                     mediaIds.Add(Path.GetFileNameWithoutExtension(mediaFile));
                 }
@@ -62,8 +62,7 @@ namespace MediaDatabase.Service
             MediaInfo mediaInfo;
             if (!File.Exists(mediaInfoFilePath))
             {
-                 mediaInfo = new MediaInfo();
-                 mediaInfo = await UpdateMediaInfo(mediaId, mediaInfo);
+                 return new MediaInfo();
             }
             
             await using (var reader = File.OpenRead(mediaInfoFilePath))
@@ -77,7 +76,7 @@ namespace MediaDatabase.Service
         public async Task<MediaInfo> GetMediaInfo(string mediaId)
         {
             string mediaInfoFileName = $"{mediaId}.json";
-            string mediaInfoFilePath = Path.Combine(_mediaStoragePath, mediaInfoFileName);
+            string mediaInfoFilePath = Path.Combine(_infoStoragePath, mediaInfoFileName);
 
             await using (var reader = File.OpenRead(mediaInfoFilePath))
             {
