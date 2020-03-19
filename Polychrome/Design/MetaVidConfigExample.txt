@@ -4,13 +4,16 @@
 	"services": {
 		"tmdb-service": {
 			"exports-root": ""
+		},
+		"media-database-service": {			
+			"info-storage-path": "C:/here"
 		}
 	},
 	"task-list": {
-		"working-directory": "c:/here/",
+		"working-directory": "C:/here",
 		"probe-task": {
-			"ffprobe-path": "c:/here.exe",
-			"source-folder": "c:/here"			
+			"ffprobe-path": "C:/here",
+			"source-folder": "C:/here"
 		}
 	}
 }

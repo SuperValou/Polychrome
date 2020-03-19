@@ -56,27 +56,25 @@ namespace MetaVid.Tasks
                     continue;
                 }
 
-                string mediaId = await _mediaDatabaseService.GetMediaId(fileToProbe);
-
                 ProbedData probedData;
                 await using (var reader = File.OpenRead(ffprobeOutputFilePath))
                 {
                     probedData = await JsonSerializer.DeserializeAsync<ProbedData>(reader);
                 }
 
-                MediaInfo mediaInfo = await _mediaDatabaseService.GetOrCreateMediaInfo(mediaId);
+                MediaInfo mediaInfo = await _mediaDatabaseService.CreateOrGetMediaInfoFromFile(fileToProbe);
 
                 try
                 {
-                    mediaInfo = UpdateMediaInfoWithProbedData(mediaInfo, probedData);
+                    mediaInfo = SetMediaInfoWithProbedData(mediaInfo, probedData);
                 }
                 catch (Exception e)
                 {
-                    Logger.Warn($"Unable to update media database for {mediaId}: " + e.Message, e);
+                    Logger.Warn($"Unable to update media database for '{fileToProbe}': " + e.Message, e);
                     continue;
                 }
                 
-                await _mediaDatabaseService.UpdateMediaInfo(mediaId, mediaInfo);
+                await _mediaDatabaseService.UpdateMediaInfo(mediaInfo.MediaId, mediaInfo);
 
                 Logger.Debug($"Probed '{outputFileName}'");
                 probedFileCount++;
@@ -85,7 +83,7 @@ namespace MetaVid.Tasks
             Logger.Info($"Probed {probedFileCount} files.");
         }
 
-        private MediaInfo UpdateMediaInfoWithProbedData(MediaInfo mediaInfoSource, ProbedData probedData)
+        private MediaInfo SetMediaInfoWithProbedData(MediaInfo mediaInfoSource, ProbedData probedData)
         {
             MediaInfo mediaInfo = mediaInfoSource.Clone();
 

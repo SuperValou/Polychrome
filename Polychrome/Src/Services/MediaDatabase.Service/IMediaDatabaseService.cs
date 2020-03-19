@@ -9,17 +9,16 @@ namespace MediaDatabase.Service
     public interface IMediaDatabaseService : IService
     {
         Task Initialize(MediaDatabaseServiceConfig config);
-
-        Task<string> GetMediaId(string mediaFilePath);
-
+        
         Task<ICollection<string>> GetAllMediaIds();
 
-        Task<MediaInfo> GetOrCreateMediaInfo(string mediaId);
+        Task<MediaInfo> CreateOrGetMediaInfoFromFile(string mediaFilePath);
 
         Task<MediaInfo> GetMediaInfo(string mediaId);
 
         Task<MediaInfo> UpdateMediaInfo(string mediaId, MediaInfo mediaInfo);
 
-        
+        Task DeleteMediaInfo(string mediaId, MediaInfo mediaInfo);
+
     }
 }

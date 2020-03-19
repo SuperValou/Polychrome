@@ -7,6 +7,9 @@ namespace MediaDatabase.Service.DTOs
 {
     public class MediaInfo
     {
+        [JsonPropertyName("media-id")]
+        public string MediaId { get; set; }
+
         [JsonPropertyName("file-path")]
         public string FilePath { get; set; }
         

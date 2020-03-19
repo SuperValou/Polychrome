@@ -2,21 +2,18 @@
 	"app-name": "SwapFusion",
 	"app-version": "0.1.0",
 	"services": {
-		"media-database-service": {
-			"media-storage-path": "C:\\here",
-			"info-storage-path": "C:\\here"
+		"media-database-service": {			
+			"info-storage-path": "C:/here"
 		}
 	},
 	"task-list": {
-		"working-directory": "c:/here/",
+		"working-directory": "C:/here",
 		"generate-swaps": {
-			"ffmpeg-path": "c:/here.exe",
-			"swap-duration": 120,
-			"couple-count": 5,
-			"swaps-per-couple": 10,
-			"use-media": [
-				"media-id-1",
-				"media-id-2"
+			"ffmpeg-path": "C:/here",
+			"swap-duration": 20,
+			"couple-count": 10,
+			"swaps-per-couple": 4,
+			"use-media": [				
 			],
 			"audio-language": "fra"
 		}
