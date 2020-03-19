@@ -27,23 +27,46 @@ namespace SwapFusion.Tasks
 
         public override async Task Execute()
         {
-            List<string> mediaIds = new List<string>();
-            if (_setup.UseMedia == null || _setup.UseMedia.Count == 0)
+            // video
+            List<string> videoMediaIds = new List<string>();
+            if (_setup.VideoMediaIds == null || _setup.VideoMediaIds.Count == 0)
             {
                 ICollection<string> availableMediaIds = await _mediaDatabaseService.GetAllMediaIds();
-                mediaIds.AddRange(availableMediaIds);
+                videoMediaIds.AddRange(availableMediaIds);
+                if (videoMediaIds.Count == 0)
+                {
+                    Logger.Error("No video media id available from the database.");
+                    return;
+                }
             }
             else
             {
-                mediaIds.AddRange(_setup.UseMedia);
+                videoMediaIds.AddRange(_setup.VideoMediaIds);
+            }
+
+            // audio
+            List<string> audioMediaIds = new List<string>();
+            if (_setup.AudioMediaIds == null || _setup.AudioMediaIds.Count == 0)
+            {
+                ICollection<string> availableMediaIds = await _mediaDatabaseService.GetAllMediaIds();
+                audioMediaIds.AddRange(availableMediaIds);
+                if (audioMediaIds.Count == 0)
+                {
+                    Logger.Error("No audio media id available from the database.");
+                    return;
+                }
+            }
+            else
+            {
+                audioMediaIds.AddRange(_setup.AudioMediaIds);
             }
 
             ILogger ffmpegLogger = Logger.CreateSubLogger("FFMpeg.exe");
             for (int i = 0; i < _setup.CoupleCount; i++)
             {
                 // choose video
-                int videoMediaIndex = _random.Next(0, mediaIds.Count);
-                string videoMediaId = mediaIds[videoMediaIndex];
+                int videoMediaIndex = _random.Next(0, videoMediaIds.Count);
+                string videoMediaId = videoMediaIds[videoMediaIndex];
                 MediaInfo videoMediaInfo = await _mediaDatabaseService.GetMediaInfo(videoMediaId);
                 
                 VideoStream videoStream = videoMediaInfo.VideoStreams.FirstOrDefault();
@@ -63,8 +86,8 @@ namespace SwapFusion.Tasks
                 }
                 
                 // choose audio
-                int audioMediaIndex = _random.Next(0, mediaIds.Count);
-                string audioMediaId = mediaIds[audioMediaIndex];
+                int audioMediaIndex = _random.Next(0, audioMediaIds.Count);
+                string audioMediaId = audioMediaIds[audioMediaIndex];
                 MediaInfo audioMediaInfo = await _mediaDatabaseService.GetMediaInfo(audioMediaId);
 
                 AudioStream audioStream =  audioMediaInfo.AudioStreams.FirstOrDefault(stream => stream.Language == _setup.AudioLanguage);

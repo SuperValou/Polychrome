@@ -17,8 +17,11 @@ namespace SwapFusion.Configurations
         [JsonPropertyName("swaps-per-couple")]
         public int SwapsPerCouple { get; set; }
 
-        [JsonPropertyName("use-media")]
-        public List<string> UseMedia { get; set; }
+        [JsonPropertyName("video-media-ids")]
+        public List<string> VideoMediaIds { get; set; }
+
+        [JsonPropertyName("audio-media-ids")]
+        public List<string> AudioMediaIds { get; set; }
 
         [JsonPropertyName("audio-language")]
         public string AudioLanguage { get; set; }

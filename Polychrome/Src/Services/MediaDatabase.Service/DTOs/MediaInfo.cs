@@ -10,6 +10,9 @@ namespace MediaDatabase.Service.DTOs
         [JsonPropertyName("media-id")]
         public string MediaId { get; set; }
 
+        [JsonPropertyName("relative-movie-id")]
+        public int RelativeMovieId { get; set; }
+
         [JsonPropertyName("file-path")]
         public string FilePath { get; set; }
         

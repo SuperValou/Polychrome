@@ -13,7 +13,9 @@
 			"swap-duration": 20,
 			"couple-count": 10,
 			"swaps-per-couple": 4,
-			"use-media": [				
+			"video-media-ids": [				
+			],
+			"audio-media-ids": [				
 			],
 			"audio-language": "fra"
 		}

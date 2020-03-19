@@ -92,10 +92,19 @@ namespace MetaVid.Tasks
             mediaInfo.Duration =  float.Parse(probedData.Format.Duration, CultureInfo.InvariantCulture.NumberFormat);
 
             // metadata
-            mediaInfo.FileSize = long.Parse(probedData.Format.Size);
-            mediaInfo.CreatedOn = DateTime.Parse(probedData.Format.Tags.CreationTime);
+            mediaInfo.FileSize = long.Parse(probedData.Format.Size);            
             mediaInfo.Encoder = probedData.Format.Tags.Encoder;
             mediaInfo.FormatLongName = probedData.Format.FormatLongName;
+                        
+            if (string.IsNullOrEmpty(probedData.Format.Tags.CreationTime))
+            {
+                mediaInfo.CreatedOn = DateTime.MinValue;
+            }
+            else
+            {
+                mediaInfo.CreatedOn = DateTime.Parse(probedData.Format.Tags.CreationTime);
+            }
+            
 
             // streams
             mediaInfo.NbStreams = probedData.Format.NbStreams;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -149,9 +149,10 @@ namespace MediaDatabase.Service
                         continue;
                     }
 
-                    var split = line.Split(':'); // #yolo
-                    string mediaId = split[0];
-                    string mediaInfoPath = split[1];
+                    // #yolo
+                    int splitCharIndex = line.IndexOf(':');
+                    string mediaId = line.Remove(splitCharIndex);
+                    string mediaInfoPath = line.Substring(splitCharIndex + 1);
 
                     if (File.Exists(mediaInfoPath)) // worst idea
                     {
